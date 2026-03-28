@@ -20,7 +20,9 @@ export default async function DashboardLayout({
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       <SidebarClient userEmail={user.email ?? ''} userId={user.id} />
       <main className="flex-1 overflow-y-auto">
-        <div className="p-8">{children}</div>
+        {/* Spacer for mobile top bar */}
+        <div className="lg:hidden h-14" />
+        <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
     </div>
   )
