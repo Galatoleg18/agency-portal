@@ -191,7 +191,7 @@ export default async function ClientProjectPage({ params }: { params: { id: stri
               ))
             )}
           </div>
-          <AddCommentForm projectId={params.id} userId={user.id} />
+          <AddCommentForm projectId={params.id} authorEmail={user.email ?? ''} authorName={user.email ?? ''} />
         </div>
 
       </div>
