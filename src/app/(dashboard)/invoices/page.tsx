@@ -56,8 +56,8 @@ export default async function InvoicesPage() {
               </thead>
               <tbody>
                 {invoices.map((invoice) => {
-                  const client = invoice.clients as { name: string } | null
-                  const project = invoice.projects as { name: string } | null
+                  const client = (invoice.clients as { name: string }[] | null)?.[0] ?? null
+                  const project = (invoice.projects as { name: string }[] | null)?.[0] ?? null
 
                   return (
                     <tr

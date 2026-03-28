@@ -63,7 +63,7 @@ export default async function ProjectsPage() {
                           ) / phases.length
                         )
                       : 0
-                  const client = project.clients as { name: string } | null
+                  const client = (project.clients as { name: string }[] | null)?.[0] ?? null
 
                   return (
                     <tr
