@@ -19,13 +19,22 @@ export default async function ProjectsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Projects</h1>
+        <Link href="/projects/new"
+          className="inline-flex items-center gap-2 bg-[#C9A96E] hover:bg-[#b8924d] text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors">
+          + New Project
+        </Link>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         {!projects || projects.length === 0 ? (
           <div className="p-12 text-center">
-            <FolderKanban size={40} className="mx-auto text-gray-300 mb-3" />
-            <p className="text-gray-500">No projects found.</p>
+            <FolderKanban size={40} className="mx-auto text-gray-300 mb-4" />
+            <p className="text-gray-700 font-medium mb-1">No projects yet</p>
+            <p className="text-gray-400 text-sm mb-5">Create your first project to start tracking progress.</p>
+            <Link href="/projects/new"
+              className="inline-flex items-center gap-2 bg-[#C9A96E] hover:bg-[#b8924d] text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors">
+              + Create First Project
+            </Link>
           </div>
         ) : (
           <div className="overflow-x-auto">

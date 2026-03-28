@@ -5,6 +5,9 @@ import { formatDate, statusBadgeClass, statusLabel } from '@/lib/utils'
 import { ArrowLeft, Calendar, Building2 } from 'lucide-react'
 import TaskToggle from '@/components/TaskToggle'
 import AddCommentForm from '@/components/AddCommentForm'
+import AddPhaseForm from '@/components/AddPhaseForm'
+import AddTaskForm from '@/components/AddTaskForm'
+import PhaseProgress from '@/components/PhaseProgress'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -140,7 +143,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {phases.length === 0 ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-400">
-            No phases defined for this project yet.
+            No phases yet — add your first phase below.
           </div>
         ) : (
           phases.map((phase) => {
@@ -179,33 +182,27 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                   </span>
                 </div>
 
-                {/* Progress bar */}
-                <div className="w-full bg-gray-100 rounded-full h-2 mb-5">
-                  <div
-                    className="bg-[#C9A96E] h-2 rounded-full transition-all"
-                    style={{ width: `${phase.completion_pct}%` }}
-                  />
-                </div>
+                {/* Progress slider */}
+                <PhaseProgress phaseId={phase.id} currentPct={phase.completion_pct} />
 
                 {/* Tasks */}
-                {tasks.length > 0 && (
-                  <div className="mb-4">
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                      Tasks ({completedTasks}/{tasks.length})
-                    </p>
-                    <div className="space-y-2">
-                      {tasks.map((task) => (
-                        <TaskToggle
-                          key={task.id}
-                          taskId={task.id}
-                          title={task.title}
-                          isComplete={task.is_complete}
-                          dueDate={task.due_date}
-                        />
-                      ))}
-                    </div>
+                <div className="mb-4">
+                  <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                    Tasks {tasks.length > 0 && `(${completedTasks}/${tasks.length})`}
+                  </p>
+                  <div className="space-y-2">
+                    {tasks.map((task) => (
+                      <TaskToggle
+                        key={task.id}
+                        taskId={task.id}
+                        title={task.title}
+                        isComplete={task.is_complete}
+                        dueDate={task.due_date}
+                      />
+                    ))}
                   </div>
-                )}
+                  <AddTaskForm phaseId={phase.id} nextOrder={tasks.length} />
+                </div>
 
                 {/* Deliverables */}
                 {deliverables.length > 0 && (
@@ -245,6 +242,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             )
           })
         )}
+        <AddPhaseForm projectId={id} nextOrder={phases.length} />
       </div>
 
       {/* Comments */}

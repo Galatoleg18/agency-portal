@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatCurrency, formatDate, statusBadgeClass, statusLabel } from '@/lib/utils'
 import { FileText } from 'lucide-react'
@@ -18,13 +19,22 @@ export default async function InvoicesPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Invoices</h1>
+        <Link href="/invoices/new"
+          className="inline-flex items-center gap-2 bg-[#C9A96E] hover:bg-[#b8924d] text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition-colors">
+          + New Invoice
+        </Link>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100">
         {!invoices || invoices.length === 0 ? (
           <div className="p-12 text-center">
-            <FileText size={40} className="mx-auto text-gray-300 mb-3" />
-            <p className="text-gray-500">No invoices yet.</p>
+            <FileText size={40} className="mx-auto text-gray-300 mb-4" />
+            <p className="text-gray-700 font-medium mb-1">No invoices yet</p>
+            <p className="text-gray-400 text-sm mb-5">Create your first invoice to start tracking payments.</p>
+            <Link href="/invoices/new"
+              className="inline-flex items-center gap-2 bg-[#C9A96E] hover:bg-[#b8924d] text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors">
+              + Create First Invoice
+            </Link>
           </div>
         ) : (
           <div className="overflow-x-auto">
