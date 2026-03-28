@@ -1,199 +1,214 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { formatDate, statusBadgeClass, statusLabel } from '@/lib/utils'
 import AddCommentForm from '@/components/AddCommentForm'
+import { ArrowLeft, Calendar, CheckCircle2, Circle, Clock, Download } from 'lucide-react'
+import Link from 'next/link'
 
-export default async function ClientProjectPage({ params }: { params: { id: string } }) {
+interface PageProps { params: Promise<{ id: string }> }
+
+export default async function ClientProjectPage({ params }: PageProps) {
+  const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   const { data: project } = await supabase
     .from('projects')
-    .select(`*, clients(*), phases(*, tasks(*), deliverables(*))`)
-    .eq('id', params.id)
-    .single()
+    .select(`id, name, description, status, start_date, due_date,
+      phases(id, name, status, completion_pct, sort_order, description,
+        tasks(id, title, is_complete, sort_order, due_date),
+        deliverables(id, title, status, description, file_url))`)
+    .eq('id', id).single()
 
   if (!project) redirect('/portal')
 
   const { data: comments } = await supabase
-    .from('comments')
-    .select('*, profiles(full_name, email)')
-    .eq('project_id', params.id)
-    .order('created_at', { ascending: true })
+    .from('comments').select('id, body, author_name, author_email, created_at')
+    .eq('project_id', id).order('created_at', { ascending: true })
 
-  const statusColors: Record<string, string> = {
-    active: 'bg-green-100 text-green-700',
-    on_hold: 'bg-yellow-100 text-yellow-700',
-    completed: 'bg-blue-100 text-blue-700',
-    cancelled: 'bg-red-100 text-red-700',
-  }
+  const phases = ((project.phases as Array<{
+    id: string; name: string; status: string; completion_pct: number; sort_order: number; description: string | null;
+    tasks: Array<{ id: string; title: string; is_complete: boolean; sort_order: number; due_date: string | null }>;
+    deliverables: Array<{ id: string; title: string; status: string; description: string | null; file_url: string | null }>;
+  }>) ?? []).sort((a, b) => a.sort_order - b.sort_order)
 
-  const phaseStatusColors: Record<string, string> = {
-    pending: 'bg-gray-100 text-gray-600',
-    in_progress: 'bg-yellow-100 text-yellow-700',
-    completed: 'bg-green-100 text-green-700',
-  }
-
-  const sortedPhases = (project.phases || []).sort(
-    (a: any, b: any) => a.order_index - b.order_index
-  )
-
-  async function approveDeliverable(deliverableId: string, status: string) {
-    'use server'
-    const supabase = await createClient()
-    await supabase.from('deliverables').update({ status }).eq('id', deliverableId)
-  }
+  const overallProgress = phases.length
+    ? Math.round(phases.reduce((s, p) => s + p.completion_pct, 0) / phases.length) : 0
+  const totalTasks = phases.reduce((s, p) => s + (p.tasks?.length ?? 0), 0)
+  const doneTasks = phases.reduce((s, p) => s + (p.tasks?.filter(t => t.is_complete).length ?? 0), 0)
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 md:p-10">
-      <div className="max-w-4xl mx-auto">
+    <div>
+      {/* Back */}
+      <Link href="/portal" className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-700 transition-colors mb-5">
+        <ArrowLeft size={15} /> All Projects
+      </Link>
 
-        {/* Header */}
-        <div className="mb-8">
-          <a href="/portal" className="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-flex items-center gap-1">
-            ← Back to My Projects
-          </a>
-          <div className="flex items-start justify-between mt-2">
-            <div>
-              <h1 className="text-2xl font-bold text-[#0D1F3C]">{project.name}</h1>
-              {project.description && (
-                <p className="text-gray-500 mt-1">{project.description}</p>
-              )}
-            </div>
-            <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusColors[project.status] || 'bg-gray-100 text-gray-600'}`}>
-              {project.status?.replace('_', ' ')}
-            </span>
+      {/* Header */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 mb-5">
+        <div className="flex flex-wrap items-start gap-3 mb-3">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-0.5">{project.name}</h1>
+            {project.description && <p className="text-gray-500 text-sm">{project.description}</p>}
           </div>
-
-          {(project.start_date || project.due_date) && (
-            <div className="flex gap-6 mt-3 text-sm text-gray-500">
-              {project.start_date && <span>Start: <strong className="text-gray-700">{new Date(project.start_date).toLocaleDateString()}</strong></span>}
-              {project.due_date && <span>Due: <strong className="text-gray-700">{new Date(project.due_date).toLocaleDateString()}</strong></span>}
-            </div>
-          )}
+          <span className={`rounded-full px-3 py-1 text-xs font-semibold flex-shrink-0 ${statusBadgeClass(project.status)}`}>
+            {statusLabel(project.status)}
+          </span>
         </div>
 
-        {/* Phases */}
-        <div className="space-y-6 mb-10">
-          <h2 className="text-lg font-semibold text-[#0D1F3C]">Project Phases</h2>
-          {sortedPhases.length === 0 && (
-            <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-gray-400">
-              No phases yet — your project manager will add them soon.
-            </div>
-          )}
-          {sortedPhases.map((phase: any) => (
-            <div key={phase.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-[#0D1F3C]">{phase.name}</h3>
-                <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${phaseStatusColors[phase.status] || 'bg-gray-100 text-gray-600'}`}>
-                  {phase.status?.replace('_', ' ')}
-                </span>
-              </div>
+        <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-gray-400 mb-4">
+          {project.start_date && <span className="flex items-center gap-1"><Calendar size={11} />Start: {formatDate(project.start_date)}</span>}
+          {project.due_date && <span className="flex items-center gap-1"><Clock size={11} />Due: {formatDate(project.due_date)}</span>}
+        </div>
 
-              {/* Progress bar */}
-              <div className="mb-4">
-                <div className="flex justify-between text-xs text-gray-500 mb-1">
-                  <span>Progress</span>
-                  <span>{phase.completion_pct}%</span>
-                </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div
-                    className="bg-[#C9A96E] h-2 rounded-full transition-all"
-                    style={{ width: `${phase.completion_pct}%` }}
-                  />
-                </div>
-              </div>
+        {/* Overall progress */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1 bg-gray-100 rounded-full h-3">
+            <div className="bg-[#C9A96E] h-3 rounded-full transition-all" style={{ width: `${overallProgress}%` }} />
+          </div>
+          <span className="text-sm font-bold text-gray-700 tabular-nums w-10 text-right">{overallProgress}%</span>
+        </div>
+        {totalTasks > 0 && (
+          <p className="text-xs text-gray-400 mt-1.5 flex items-center gap-1">
+            <CheckCircle2 size={12} className="text-green-400" />
+            {doneTasks} of {totalTasks} tasks complete
+          </p>
+        )}
+      </div>
 
-              {/* Tasks */}
-              {phase.tasks && phase.tasks.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">Tasks</p>
-                  <ul className="space-y-1.5">
-                    {phase.tasks.map((task: any) => (
-                      <li key={task.id} className="flex items-center gap-2 text-sm text-gray-600">
-                        <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${task.completed ? 'bg-green-500 border-green-500' : 'border-gray-300'}`}>
-                          {task.completed && <svg width="10" height="10" viewBox="0 0 12 12" fill="white"><path d="M1 6l4 4 6-7"/></svg>}
-                        </span>
-                        <span className={task.completed ? 'line-through text-gray-400' : ''}>{task.title}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+      {/* Phases */}
+      <div className="mb-6">
+        <h2 className="font-bold text-gray-900 mb-4">Project Phases</h2>
+        {!phases.length ? (
+          <div className="bg-white rounded-2xl border border-dashed border-gray-200 p-10 text-center text-gray-400 text-sm">
+            Your project manager will add phases soon.
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {phases.map((phase, idx) => {
+              const tasks = [...(phase.tasks ?? [])].sort((a, b) => a.sort_order - b.sort_order)
+              const deliverables = phase.deliverables ?? []
+              const phaseDone = tasks.filter(t => t.is_complete).length
 
-              {/* Deliverables */}
-              {phase.deliverables && phase.deliverables.length > 0 && (
-                <div>
-                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">Deliverables</p>
-                  <div className="space-y-2">
-                    {phase.deliverables.map((d: any) => (
-                      <div key={d.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                          <p className="text-sm font-medium text-gray-700">{d.title}</p>
-                          {d.description && <p className="text-xs text-gray-400">{d.description}</p>}
+              return (
+                <div key={phase.id} className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                  <div className="px-5 py-4 border-b border-gray-50">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-6 h-6 rounded-full bg-[#0D1F3C]/5 flex items-center justify-center flex-shrink-0">
+                          <span className="text-xs font-bold text-[#0D1F3C]/40">{idx + 1}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          {d.file_url && (
-                            <a href={d.file_url} target="_blank" rel="noopener noreferrer"
-                              className="text-xs text-[#C9A96E] font-medium hover:underline">
-                              Download
-                            </a>
-                          )}
-                          {d.status === 'pending' && (
-                            <form>
-                              <input type="hidden" name="id" value={d.id} />
-                              <div className="flex gap-1">
-                                <button formAction={approveDeliverable.bind(null, d.id, 'approved')}
-                                  className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded font-medium hover:bg-green-200">
-                                  Approve
-                                </button>
-                                <button formAction={approveDeliverable.bind(null, d.id, 'changes_requested')}
-                                  className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-medium hover:bg-red-200">
-                                  Changes
-                                </button>
-                              </div>
-                            </form>
-                          )}
-                          {d.status !== 'pending' && (
-                            <span className={`text-xs rounded-full px-2 py-0.5 font-semibold ${d.status === 'approved' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                              {d.status === 'approved' ? 'Approved' : 'Changes Requested'}
-                            </span>
-                          )}
+                        <div>
+                          <h3 className="font-semibold text-gray-900 text-sm">{phase.name}</h3>
+                          {phase.description && <p className="text-xs text-gray-400 mt-0.5">{phase.description}</p>}
                         </div>
                       </div>
-                    ))}
+                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold flex-shrink-0 ${statusBadgeClass(phase.status)}`}>
+                        {statusLabel(phase.status)}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 bg-gray-100 rounded-full h-1.5">
+                        <div className="bg-[#C9A96E] h-1.5 rounded-full" style={{ width: `${phase.completion_pct}%` }} />
+                      </div>
+                      <span className="text-xs font-bold text-[#C9A96E] tabular-nums w-9 text-right">{phase.completion_pct}%</span>
+                    </div>
+                  </div>
+
+                  <div className="px-5 py-4 space-y-4">
+                    {/* Tasks (read-only for clients) */}
+                    {tasks.length > 0 && (
+                      <div>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">
+                          Tasks · {phaseDone}/{tasks.length}
+                        </p>
+                        <div className="space-y-1.5">
+                          {tasks.map(task => (
+                            <div key={task.id} className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 border text-sm
+                              ${task.is_complete ? 'border-green-100 bg-green-50' : 'border-gray-100'}`}>
+                              {task.is_complete
+                                ? <CheckCircle2 size={15} className="text-green-500 flex-shrink-0" />
+                                : <Circle size={15} className="text-gray-300 flex-shrink-0" />}
+                              <span className={task.is_complete ? 'line-through text-gray-400' : 'text-gray-700'}>
+                                {task.title}
+                              </span>
+                              {task.due_date && (
+                                <span className="text-xs text-gray-400 ml-auto flex-shrink-0">
+                                  {new Date(task.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Deliverables */}
+                    {deliverables.length > 0 && (
+                      <div className={tasks.length > 0 ? 'pt-3 border-t border-gray-50' : ''}>
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Deliverables</p>
+                        <div className="space-y-2">
+                          {deliverables.map(d => (
+                            <div key={d.id} className="flex items-center justify-between gap-3 rounded-xl border border-gray-100 px-4 py-3">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 truncate">{d.title}</p>
+                                {d.description && <p className="text-xs text-gray-400 mt-0.5">{d.description}</p>}
+                              </div>
+                              <div className="flex items-center gap-2 flex-shrink-0">
+                                {d.file_url && (
+                                  <a href={d.file_url} target="_blank" rel="noopener noreferrer"
+                                    className="flex items-center gap-1 text-xs text-[#C9A96E] font-semibold hover:underline">
+                                    <Download size={11} /> File
+                                  </a>
+                                )}
+                                <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusBadgeClass(d.status)}`}>
+                                  {statusLabel(d.status)}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
+              )
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Messages */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6">
+        <h2 className="font-bold text-gray-900 mb-5">
+          Messages {comments?.length ? <span className="text-gray-400 font-normal text-sm">({comments.length})</span> : ''}
+        </h2>
+
+        <div className="space-y-4 mb-6">
+          {!comments?.length ? (
+            <div className="text-center py-6 text-sm text-gray-400">
+              No messages yet — start the conversation below.
+            </div>
+          ) : comments.map(c => (
+            <div key={c.id} className="flex gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#0D1F3C] flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">
+                {(c.author_name ?? c.author_email)?.[0]?.toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-x-2 mb-1">
+                  <span className="text-sm font-semibold text-gray-900">{c.author_name ?? c.author_email}</span>
+                  <span className="text-xs text-gray-400">{formatDate(c.created_at)}</span>
+                </div>
+                <div className="bg-gray-50 rounded-xl px-4 py-3">
+                  <p className="text-sm text-gray-700 leading-relaxed">{c.body}</p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Comments */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-semibold text-[#0D1F3C] mb-4">Messages</h2>
-          <div className="space-y-4 mb-6">
-            {!comments || comments.length === 0 ? (
-              <p className="text-gray-400 text-sm">No messages yet. Start the conversation below.</p>
-            ) : (
-              comments.map((c: any) => (
-                <div key={c.id} className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#0D1F3C] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                    {(c.profiles?.full_name || c.profiles?.email || 'U')[0].toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 mb-0.5">
-                      {c.profiles?.full_name || c.profiles?.email} · {new Date(c.created_at).toLocaleDateString()}
-                    </p>
-                    <p className="text-sm text-gray-700">{c.body}</p>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-          <AddCommentForm projectId={params.id} authorEmail={user.email ?? ''} authorName={user.email ?? ''} />
-        </div>
-
+        <AddCommentForm projectId={id} authorEmail={user.email ?? ''} authorName={user.email ?? ''} />
       </div>
     </div>
   )

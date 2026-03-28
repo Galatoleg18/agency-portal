@@ -2,172 +2,85 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 export default function NewClientPage() {
   const router = useRouter()
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    notes: '',
-  })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', notes: '' })
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm(f => ({ ...f, [k]: e.target.value }))
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError(null)
-
     const supabase = createClient()
-    const { error: insertError } = await supabase.from('clients').insert({
-      name: form.name.trim(),
-      email: form.email.trim().toLowerCase(),
-      phone: form.phone.trim() || null,
-      company: form.company.trim() || null,
-      notes: form.notes.trim() || null,
+    const { error: err } = await supabase.from('clients').insert({
+      name: form.name, email: form.email,
+      phone: form.phone || null,
+      company: form.company || null,
+      notes: form.notes || null,
     })
-
-    if (insertError) {
-      setError(insertError.message)
-      setLoading(false)
-      return
-    }
-
+    if (err) { setError(err.message); setLoading(false); return }
     router.push('/clients')
-    router.refresh()
   }
 
+  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A96E] focus:border-transparent transition-all"
+  const labelCls = "block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5"
+
   return (
-    <div>
-      <div className="flex items-center gap-3 mb-6">
-        <Link
-          href="/clients"
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
-        >
+    <div className="max-w-2xl">
+      <div className="flex items-center gap-3 mb-7">
+        <Link href="/clients" className="w-8 h-8 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-700 transition-all">
           <ArrowLeft size={16} />
-          Clients
         </Link>
-        <span className="text-gray-300">/</span>
-        <span className="text-sm font-medium text-gray-900">New Client</span>
+        <h1 className="text-2xl font-bold text-gray-900">Add Client</h1>
       </div>
 
-      <div className="max-w-xl">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">
-          Add New Client
-        </h1>
-
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 space-y-5"
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Full Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                name="name"
-                type="text"
-                required
-                value={form.name}
-                onChange={handleChange}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A96E] focus:border-transparent"
-                placeholder="Jane Smith"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Company
-              </label>
-              <input
-                name="company"
-                type="text"
-                value={form.company}
-                onChange={handleChange}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A96E] focus:border-transparent"
-                placeholder="Acme Corp"
-              />
-            </div>
-          </div>
-
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-7 space-y-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Email Address <span className="text-red-500">*</span>
-            </label>
-            <input
-              name="email"
-              type="email"
-              required
-              value={form.email}
-              onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A96E] focus:border-transparent"
-              placeholder="jane@acme.com"
-            />
+            <label className={labelCls}>Full Name *</label>
+            <input required value={form.name} onChange={set('name')} className={inputCls} placeholder="Jane Smith" />
           </div>
-
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Phone Number
-            </label>
-            <input
-              name="phone"
-              type="tel"
-              value={form.phone}
-              onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A96E] focus:border-transparent"
-              placeholder="+1 (555) 000-0000"
-            />
+            <label className={labelCls}>Company</label>
+            <input value={form.company} onChange={set('company')} className={inputCls} placeholder="Acme Corp" />
           </div>
-
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Notes
-            </label>
-            <textarea
-              name="notes"
-              rows={4}
-              value={form.notes}
-              onChange={handleChange}
-              className="w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A96E] focus:border-transparent resize-none"
-              placeholder="Any additional notes about this client…"
-            />
+            <label className={labelCls}>Email *</label>
+            <input required type="email" value={form.email} onChange={set('email')} className={inputCls} placeholder="jane@example.com" />
           </div>
-
-          {error && (
-            <div className="rounded-lg bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-600">
-              {error}
-            </div>
-          )}
-
-          <div className="flex items-center gap-3 pt-2">
-            <button
-              type="submit"
-              disabled={loading}
-              className="bg-[#C9A96E] hover:bg-[#b8924d] text-white font-semibold px-6 py-2.5 rounded-lg text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Saving…' : 'Create Client'}
-            </button>
-            <Link
-              href="/clients"
-              className="px-4 py-2.5 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Cancel
-            </Link>
+          <div>
+            <label className={labelCls}>Phone</label>
+            <input type="tel" value={form.phone} onChange={set('phone')} className={inputCls} placeholder="+1 555 000 0000" />
           </div>
-        </form>
-      </div>
+        </div>
+        <div>
+          <label className={labelCls}>Notes</label>
+          <textarea value={form.notes} onChange={set('notes')} rows={3}
+            placeholder="Any notes about this client…" className={`${inputCls} resize-none`} />
+        </div>
+
+        {error && <div className="bg-red-50 border border-red-100 rounded-xl px-4 py-3 text-sm text-red-600">{error}</div>}
+
+        <div className="flex gap-3 pt-2">
+          <button type="submit" disabled={loading}
+            className="flex-1 bg-[#C9A96E] hover:bg-[#b8924d] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50">
+            {loading ? 'Saving…' : 'Add Client'}
+          </button>
+          <Link href="/clients" className="px-5 py-3 border border-gray-200 rounded-xl text-sm text-gray-500 hover:bg-gray-50 transition-colors font-medium">
+            Cancel
+          </Link>
+        </div>
+      </form>
     </div>
   )
 }

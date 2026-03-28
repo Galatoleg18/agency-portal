@@ -4,14 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
-  LayoutDashboard,
-  Users,
-  FolderKanban,
-  FileText,
-  Settings,
-  LogOut,
-  Menu,
-  X,
+  LayoutDashboard, Users, FolderKanban, FileText, Settings, LogOut, Menu, X,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
@@ -24,66 +17,51 @@ const navLinks = [
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
-function NavContent({
-  userEmail,
-  pathname,
-  onLogout,
-  onClose,
-}: {
-  userEmail: string
-  pathname: string
-  onLogout: () => void
-  onClose?: () => void
+function NavContent({ userEmail, pathname, onLogout, onClose }: {
+  userEmail: string; pathname: string; onLogout: () => void; onClose?: () => void
 }) {
   return (
     <div className="flex flex-col h-full">
-      {/* Logo */}
-      <div className="px-6 py-6 border-b border-white/10 flex items-center justify-between">
+      <div className="px-5 py-5 border-b border-white/10 flex items-center justify-between">
         <div>
           <span className="text-2xl font-black text-white tracking-tight">DOT IT</span>
-          <div className="w-8 h-0.5 bg-[#C9A96E] mt-1 rounded-full" />
+          <div className="w-7 h-0.5 bg-[#C9A96E] mt-1 rounded-full" />
         </div>
         {onClose && (
-          <button onClick={onClose} className="text-white/50 hover:text-white lg:hidden">
-            <X size={20} />
+          <button onClick={onClose} className="text-white/40 hover:text-white transition-colors lg:hidden p-1">
+            <X size={18} />
           </button>
         )}
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-3 py-5 space-y-0.5 overflow-y-auto scrollbar-hide">
         {navLinks.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href || pathname.startsWith(href + '/')
           return (
-            <Link
-              key={href}
-              href={href}
-              onClick={onClose}
+            <Link key={href} href={href} onClick={onClose}
               className={cn(
-                'flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-colors',
+                'flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all',
                 isActive
-                  ? 'bg-[#C9A96E]/20 text-[#C9A96E]'
-                  : 'text-white/60 hover:text-white hover:bg-white/5'
-              )}
-            >
-              <Icon size={18} className={isActive ? 'text-[#C9A96E]' : 'text-white/50'} />
+                  ? 'bg-[#C9A96E]/15 text-[#C9A96E]'
+                  : 'text-white/50 hover:text-white hover:bg-white/5'
+              )}>
+              <Icon size={17} className={isActive ? 'text-[#C9A96E]' : ''} />
               {label}
             </Link>
           )
         })}
       </nav>
 
-      {/* User section */}
       <div className="px-4 py-4 border-t border-white/10">
-        <div className="mb-3 px-2">
-          <p className="text-xs text-white/40 mb-0.5">Signed in as</p>
-          <p className="text-xs text-white/70 truncate font-medium">{userEmail}</p>
+        <div className="flex items-center gap-3 px-2 mb-3">
+          <div className="w-7 h-7 rounded-full bg-[#C9A96E]/20 flex items-center justify-center flex-shrink-0">
+            <span className="text-xs font-bold text-[#C9A96E]">{userEmail[0]?.toUpperCase()}</span>
+          </div>
+          <p className="text-xs text-white/50 truncate">{userEmail}</p>
         </div>
-        <button
-          onClick={onLogout}
-          className="flex items-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm text-white/50 hover:text-white hover:bg-white/5 transition-colors"
-        >
-          <LogOut size={16} />
+        <button onClick={onLogout}
+          className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm text-white/40 hover:text-white hover:bg-white/5 transition-colors">
+          <LogOut size={15} />
           Sign out
         </button>
       </div>
@@ -91,12 +69,7 @@ function NavContent({
   )
 }
 
-export default function SidebarClient({
-  userEmail,
-}: {
-  userEmail: string
-  userId?: string
-}) {
+export default function SidebarClient({ userEmail }: { userEmail: string; userId?: string }) {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -111,49 +84,33 @@ export default function SidebarClient({
   return (
     <>
       {/* Mobile top bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#0D1F3C] flex items-center justify-between px-4 py-3 border-b border-white/10">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#0D1F3C] flex items-center justify-between px-4 py-3.5 border-b border-white/10 shadow-lg">
         <div>
-          <span className="text-xl font-black text-white tracking-tight">DOT IT</span>
-          <div className="w-6 h-0.5 bg-[#C9A96E] mt-0.5 rounded-full" />
+          <span className="text-lg font-black text-white tracking-tight">DOT IT</span>
+          <div className="w-5 h-0.5 bg-[#C9A96E] mt-0.5 rounded-full" />
         </div>
-        <button
-          onClick={() => setMobileOpen(true)}
-          className="text-white/70 hover:text-white p-1"
-        >
-          <Menu size={22} />
+        <button onClick={() => setMobileOpen(true)} className="text-white/60 hover:text-white p-1 transition-colors">
+          <Menu size={20} />
         </button>
       </div>
 
-      {/* Mobile drawer overlay */}
+      {/* Overlay */}
       {mobileOpen && (
-        <div
-          className="lg:hidden fixed inset-0 z-50 bg-black/50"
-          onClick={() => setMobileOpen(false)}
-        />
+        <div className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+          onClick={() => setMobileOpen(false)} />
       )}
 
       {/* Mobile drawer */}
-      <div
-        className={cn(
-          'lg:hidden fixed top-0 left-0 bottom-0 z-50 w-72 bg-[#0D1F3C] transition-transform duration-300',
-          mobileOpen ? 'translate-x-0' : '-translate-x-full'
-        )}
-      >
-        <NavContent
-          userEmail={userEmail}
-          pathname={pathname}
-          onLogout={handleLogout}
-          onClose={() => setMobileOpen(false)}
-        />
+      <div className={cn(
+        'lg:hidden fixed top-0 left-0 bottom-0 z-50 w-72 bg-[#0D1F3C] transition-transform duration-300 ease-out shadow-2xl',
+        mobileOpen ? 'translate-x-0' : '-translate-x-full'
+      )}>
+        <NavContent userEmail={userEmail} pathname={pathname} onLogout={handleLogout} onClose={() => setMobileOpen(false)} />
       </div>
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-64 bg-[#0D1F3C] flex-col flex-shrink-0 h-full">
-        <NavContent
-          userEmail={userEmail}
-          pathname={pathname}
-          onLogout={handleLogout}
-        />
+      <aside className="hidden lg:flex w-60 bg-[#0D1F3C] flex-col flex-shrink-0 h-full">
+        <NavContent userEmail={userEmail} pathname={pathname} onLogout={handleLogout} />
       </aside>
     </>
   )

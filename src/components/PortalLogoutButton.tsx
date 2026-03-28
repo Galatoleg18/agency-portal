@@ -15,12 +15,10 @@ export default function PortalLogoutButton() {
   }
 
   return (
-    <button
-      onClick={handleLogout}
-      className="flex items-center gap-1.5 text-sm text-white/60 hover:text-white transition-colors"
-    >
+    <button onClick={handleLogout}
+      className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5">
       <LogOut size={14} />
-      Sign out
+      <span className="hidden sm:inline">Sign out</span>
     </button>
   )
 }

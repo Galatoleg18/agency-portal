@@ -24,23 +24,23 @@ export default function AddTaskForm({ phaseId, nextOrder }: { phaseId: string; n
 
   if (!open) return (
     <button onClick={() => setOpen(true)}
-      className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#C9A96E] font-medium mt-1">
+      className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#C9A96E] font-medium transition-colors mt-1.5 py-1">
       <Plus size={13} /> Add task
     </button>
   )
 
   return (
-    <div className="mt-2 flex gap-2 items-center">
+    <div className="flex gap-2 items-center mt-2 bg-gray-50 rounded-xl border border-gray-200 px-3 py-2">
       <input autoFocus value={title} onChange={e => setTitle(e.target.value)}
         onKeyDown={e => { if (e.key === 'Enter') handleAdd(); if (e.key === 'Escape') setOpen(false) }}
-        className="flex-1 px-2.5 py-1.5 border border-[#C9A96E] rounded-lg text-xs focus:outline-none"
-        placeholder="Task title..." />
+        className="flex-1 text-sm focus:outline-none bg-transparent placeholder-gray-400"
+        placeholder="Task name…" />
       <button onClick={handleAdd} disabled={loading || !title.trim()}
-        className="bg-[#C9A96E] text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold disabled:opacity-50">
+        className="bg-[#C9A96E] text-white px-2.5 py-1 rounded-lg text-xs font-bold disabled:opacity-50 transition-colors hover:bg-[#b8924d]">
         Add
       </button>
       <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600">
-        <X size={15} />
+        <X size={14} />
       </button>
     </div>
   )
