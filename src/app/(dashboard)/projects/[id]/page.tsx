@@ -41,12 +41,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const client = project.clients as {
+  const client = (project.clients as {
     id: string
     name: string
     email: string
     company: string | null
-  } | null
+  }[] | null)?.[0] ?? null
 
   const phases = (
     (project.phases as Array<{
