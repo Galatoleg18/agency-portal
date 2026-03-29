@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatCurrency, formatDate, statusBadgeClass, statusLabel } from '@/lib/utils'
-import { FileText, Plus, AlertCircle, TrendingUp } from 'lucide-react'
+import { FileText, Plus, AlertCircle, TrendingUp, Download } from 'lucide-react'
 import StatusSelect from '@/components/StatusSelect'
 
 export default async function InvoicesPage() {
@@ -94,9 +94,15 @@ export default async function InvoicesPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <StatusSelect table="invoices" id={invoice.id} currentStatus={invoice.status} />
-                    <p className="text-xs text-gray-400">
-                      {invoice.status === 'paid' ? `Paid ${formatDate(invoice.paid_date)}` : `Due ${formatDate(invoice.due_date)}`}
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <p className="text-xs text-gray-400">
+                        {invoice.status === 'paid' ? `Paid ${formatDate(invoice.paid_date)}` : `Due ${formatDate(invoice.due_date)}`}
+                      </p>
+                      <Link href={`/invoice/${invoice.id}`} target="_blank"
+                        className="text-xs text-gray-400 hover:text-[#6366F1] transition-colors flex items-center gap-1">
+                        <Download size={12} /> PDF
+                      </Link>
+                    </div>
                   </div>
                 </div>
               )
@@ -133,6 +139,12 @@ export default async function InvoicesPage() {
                       </td>
                       <td className="px-5 py-3.5 text-xs text-gray-400">
                         {invoice.status === 'paid' ? formatDate(invoice.paid_date) : formatDate(invoice.due_date)}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <Link href={`/invoice/${invoice.id}`} target="_blank"
+                          className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#6366F1] transition-colors">
+                          <Download size={12} /> PDF
+                        </Link>
                       </td>
                     </tr>
                   )

@@ -10,6 +10,7 @@ import AddTaskForm from '@/components/AddTaskForm'
 import PhaseProgress from '@/components/PhaseProgress'
 import StatusSelect from '@/components/StatusSelect'
 import TimeLogger from '@/components/TimeLogger'
+import ShareStatusButton from '@/components/ShareStatusButton'
 
 interface PageProps { params: Promise<{ id: string }> }
 
@@ -114,7 +115,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Progress ring */}
+          {/* Actions */}
+          <div className="flex flex-col gap-2 flex-shrink-0 items-end">
+            <ShareStatusButton projectId={project.id} />
+          </div>
+
+        {/* Progress ring */}
           <div className="flex-shrink-0">
             <div className="inline-flex items-center gap-3 bg-[#F5F6FA] rounded-xl px-4 py-3">
               <div className="relative w-12 h-12">
