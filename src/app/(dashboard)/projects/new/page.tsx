@@ -73,7 +73,7 @@ function NewProjectForm() {
     router.push(`/projects/${data.id}`)
   }
 
-  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent transition-all bg-white"
+  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-all bg-white"
   const labelCls = "block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5"
 
   return (
@@ -86,16 +86,16 @@ function NewProjectForm() {
       </div>
 
       {templateName && (
-        <div className="mb-5 bg-[#22C55E]/10 border border-[#22C55E]/30 rounded-xl px-4 py-3 flex items-center gap-2">
-          <LayoutTemplate size={15} className="text-[#22C55E]" />
-          <p className="text-sm text-[#16a34a] font-medium">Using template: <strong>{templateName}</strong></p>
-          <Link href="/projects/new" className="ml-auto text-xs text-[#16a34a] hover:underline">Remove</Link>
+        <div className="mb-5 bg-[#6366F1]/10 border border-[#6366F1]/30 rounded-xl px-4 py-3 flex items-center gap-2">
+          <LayoutTemplate size={15} className="text-[#6366F1]" />
+          <p className="text-sm text-[#4f46e5] font-medium">Using template: <strong>{templateName}</strong></p>
+          <Link href="/projects/new" className="ml-auto text-xs text-[#4f46e5] hover:underline">Remove</Link>
         </div>
       )}
 
       {!templateId && (
         <div className="mb-5">
-          <Link href="/templates" className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-[#22C55E] transition-colors">
+          <Link href="/templates" className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-[#6366F1] transition-colors">
             <LayoutTemplate size={14} /> Start from a template →
           </Link>
         </div>
@@ -146,7 +146,7 @@ function NewProjectForm() {
         {error && <div className="bg-red-50 border border-red-100 rounded-xl px-4 py-3 text-sm text-red-600">{error}</div>}
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={loading}
-            className="flex-1 bg-[#22C55E] hover:bg-[#16a34a] text-white font-bold py-3 px-4 rounded-xl transition-all disabled:opacity-50 shadow-sm">
+            className="flex-1 bg-[#6366F1] hover:bg-[#4f46e5] text-white font-bold py-3 px-4 rounded-xl transition-all disabled:opacity-50 shadow-sm">
             {loading ? 'Creating…' : templateId ? '🚀 Create from Template' : 'Create Project'}
           </button>
           <Link href="/projects" className="px-5 py-3 border border-gray-200 rounded-xl text-sm text-gray-500 hover:bg-gray-50 font-medium">

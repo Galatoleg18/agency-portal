@@ -37,7 +37,7 @@ export default function TimeLogger({ projectId, phaseId, taskId, userEmail }: {
 
   if (!open) return (
     <button onClick={() => setOpen(true)}
-      className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#22C55E] font-medium transition-colors py-1">
+      className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#6366F1] font-medium transition-colors py-1">
       <Clock size={12} /> Log time
     </button>
   )
@@ -47,18 +47,18 @@ export default function TimeLogger({ projectId, phaseId, taskId, userEmail }: {
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1 flex-1">
           <input type="number" min="0" max="99" value={hours} onChange={e => setHours(e.target.value)}
-            placeholder="0" className="w-14 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#22C55E]" />
+            placeholder="0" className="w-14 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#6366F1]" />
           <span className="text-xs text-gray-400">h</span>
           <input type="number" min="0" max="59" value={minutes} onChange={e => setMinutes(e.target.value)}
-            placeholder="0" className="w-14 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#22C55E]" />
+            placeholder="0" className="w-14 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-[#6366F1]" />
           <span className="text-xs text-gray-400">m</span>
         </div>
         <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={14} /></button>
       </div>
       <input value={desc} onChange={e => setDesc(e.target.value)} placeholder="What did you work on?"
-        className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#22C55E]" />
+        className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1]" />
       <button onClick={handleLog} disabled={loading || (!hours && !minutes)}
-        className="w-full bg-[#22C55E] hover:bg-[#16a34a] text-white text-xs font-bold py-2 rounded-lg disabled:opacity-50 transition-colors">
+        className="w-full bg-[#6366F1] hover:bg-[#4f46e5] text-white text-xs font-bold py-2 rounded-lg disabled:opacity-50 transition-colors">
         {loading ? 'Logging…' : 'Log Time'}
       </button>
     </div>

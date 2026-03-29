@@ -17,7 +17,7 @@ export default async function TemplatesPage() {
           <p className="text-sm text-gray-400 mt-0.5">Reusable phase/task structures for new projects.</p>
         </div>
         <Link href="/templates/new"
-          className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16a34a] text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm">
+          className="inline-flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm">
           <Plus size={16} />
           <span className="hidden sm:inline">New Template</span>
           <span className="sm:hidden">New</span>
@@ -32,7 +32,7 @@ export default async function TemplatesPage() {
           <p className="font-semibold text-gray-700 mb-1">No templates yet</p>
           <p className="text-gray-400 text-sm mb-6">Create a template to quickly scaffold new projects.</p>
           <Link href="/templates/new"
-            className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16a34a] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all">
+            className="inline-flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all">
             <Plus size={15} /> Create Template
           </Link>
         </div>
@@ -46,7 +46,7 @@ export default async function TemplatesPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2.5 mb-1">
-                      <LayoutTemplate size={16} className="text-[#22C55E] flex-shrink-0" />
+                      <LayoutTemplate size={16} className="text-[#6366F1] flex-shrink-0" />
                       <h3 className="font-semibold text-gray-900">{t.name}</h3>
                     </div>
                     {t.description && <p className="text-sm text-gray-400 mb-3">{t.description}</p>}
@@ -60,7 +60,7 @@ export default async function TemplatesPage() {
                     <p className="text-xs text-gray-400 mt-2">{phases.length} phases · {taskCount} tasks</p>
                   </div>
                   <Link href={`/projects/new?template=${t.id}`}
-                    className="flex-shrink-0 inline-flex items-center gap-1.5 text-sm font-semibold text-[#22C55E] hover:text-[#16a34a] transition-colors">
+                    className="flex-shrink-0 inline-flex items-center gap-1.5 text-sm font-semibold text-[#6366F1] hover:text-[#4f46e5] transition-colors">
                     Use <ChevronRight size={14} />
                   </Link>
                 </div>

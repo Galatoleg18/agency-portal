@@ -76,7 +76,7 @@ export default function NewTemplatePage() {
     router.push('/templates')
   }
 
-  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent transition-all"
+  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-all"
 
   return (
     <div className="max-w-2xl">
@@ -105,7 +105,7 @@ export default function NewTemplatePage() {
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold text-gray-900">Phases & Tasks</h2>
             <button onClick={addPhase}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#22C55E] hover:text-[#16a34a] transition-colors">
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#6366F1] hover:text-[#4f46e5] transition-colors">
               <Plus size={15} /> Add Phase
             </button>
           </div>
@@ -113,7 +113,7 @@ export default function NewTemplatePage() {
           {phases.length === 0 ? (
             <div className="bg-white rounded-2xl border border-dashed border-gray-200 p-8 text-center">
               <p className="text-gray-400 text-sm mb-3">No phases yet.</p>
-              <button onClick={addPhase} className="text-sm font-semibold text-[#22C55E] hover:text-[#16a34a]">
+              <button onClick={addPhase} className="text-sm font-semibold text-[#6366F1] hover:text-[#4f46e5]">
                 + Add your first phase
               </button>
             </div>
@@ -122,11 +122,11 @@ export default function NewTemplatePage() {
               {phases.map((phase, idx) => (
                 <div key={phase.id} className="bg-white rounded-2xl border border-gray-100 p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-6 h-6 rounded-full bg-[#0F2D1F]/5 flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs font-bold text-[#0F2D1F]/40">{idx + 1}</span>
+                    <div className="w-6 h-6 rounded-full bg-[#0F172A]/5 flex items-center justify-center flex-shrink-0">
+                      <span className="text-xs font-bold text-[#0F172A]/40">{idx + 1}</span>
                     </div>
                     <input value={phase.name} onChange={e => updatePhase(phase.id, e.target.value)}
-                      className="flex-1 px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#22C55E] font-medium"
+                      className="flex-1 px-3 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] font-medium"
                       placeholder="Phase name, e.g. Discovery" />
                     <button onClick={() => removePhase(phase.id)} className="text-gray-300 hover:text-red-400 transition-colors">
                       <X size={16} />
@@ -138,7 +138,7 @@ export default function NewTemplatePage() {
                       <div key={task.id} className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-gray-300 flex-shrink-0" />
                         <input value={task.title} onChange={e => updateTask(phase.id, task.id, e.target.value)}
-                          className="flex-1 px-3 py-1.5 border border-gray-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#22C55E] bg-gray-50"
+                          className="flex-1 px-3 py-1.5 border border-gray-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] bg-gray-50"
                           placeholder="Task name" />
                         <button onClick={() => removeTask(phase.id, task.id)} className="text-gray-300 hover:text-red-400 transition-colors">
                           <X size={14} />
@@ -146,7 +146,7 @@ export default function NewTemplatePage() {
                       </div>
                     ))}
                     <button onClick={() => addTask(phase.id)}
-                      className="text-xs text-gray-400 hover:text-[#22C55E] transition-colors flex items-center gap-1 mt-1">
+                      className="text-xs text-gray-400 hover:text-[#6366F1] transition-colors flex items-center gap-1 mt-1">
                       <Plus size={12} /> Add task
                     </button>
                   </div>
@@ -160,7 +160,7 @@ export default function NewTemplatePage() {
 
         <div className="flex gap-3">
           <button onClick={handleSave} disabled={loading}
-            className="flex-1 bg-[#22C55E] hover:bg-[#16a34a] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50">
+            className="flex-1 bg-[#6366F1] hover:bg-[#4f46e5] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50">
             {loading ? 'Saving…' : 'Save Template'}
           </button>
           <Link href="/templates" className="px-5 py-3 border border-gray-200 rounded-xl text-sm text-gray-500 hover:bg-gray-50 font-medium">

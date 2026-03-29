@@ -120,7 +120,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               <div className="relative w-12 h-12">
                 <svg className="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
                   <circle cx="18" cy="18" r="15" fill="none" stroke="#e5e7eb" strokeWidth="3" />
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="#22C55E" strokeWidth="3"
+                  <circle cx="18" cy="18" r="15" fill="none" stroke="#6366F1" strokeWidth="3"
                     strokeDasharray={`${overallProgress * 0.942} 94.2`} strokeLinecap="round" />
                 </svg>
                 <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-gray-700">{overallProgress}%</span>
@@ -130,7 +130,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 <p className="text-sm font-bold text-gray-700">{completedTasks}/{totalTasks} tasks</p>
                 <p className="text-xs text-gray-400">{phases.filter(p => p.status === 'completed').length}/{phases.length} phases</p>
                 {totalMinutes > 0 && (
-                  <p className="text-xs text-[#22C55E] font-semibold mt-0.5 flex items-center gap-1">
+                  <p className="text-xs text-[#6366F1] font-semibold mt-0.5 flex items-center gap-1">
                     <Clock size={10} />{totalHours}h {remainingMins}m logged
                   </p>
                 )}
@@ -153,14 +153,14 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               <div className={`h-2 rounded-full transition-all ${isOverdue ? 'bg-red-400' : 'bg-blue-300'}`}
                 style={{ width: `${Math.min(100, timelinePct)}%` }} />
               {/* Progress marker */}
-              <div className="absolute top-0 h-2 rounded-full bg-[#22C55E]/60"
+              <div className="absolute top-0 h-2 rounded-full bg-[#6366F1]/60"
                 style={{ width: `${overallProgress}%` }} />
             </div>
             <div className="flex justify-between text-xs text-gray-400 mt-1">
               <span>{formatDate(project.start_date)}</span>
               <span className="text-xs text-gray-400">
                 <span className="inline-flex items-center gap-1 mr-3"><span className="w-2 h-2 rounded-full bg-blue-300 inline-block" />Time</span>
-                <span className="inline-flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#22C55E]/60 inline-block" />Progress</span>
+                <span className="inline-flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#6366F1]/60 inline-block" />Progress</span>
               </span>
               <span>{formatDate(project.due_date)}</span>
             </div>
@@ -173,7 +173,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-5">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-gray-900 text-sm">Invoices</h2>
-            <Link href="/invoices" className="text-xs text-[#22C55E] font-semibold hover:underline">View all →</Link>
+            <Link href="/invoices" className="text-xs text-[#6366F1] font-semibold hover:underline">View all →</Link>
           </div>
           <div className="space-y-2">
             {invoices.map(inv => (
@@ -216,7 +216,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-start gap-3">
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-xs font-bold
-                        ${phase.status === 'completed' ? 'bg-green-100 text-green-600' : 'bg-[#0F2D1F]/5 text-[#0F2D1F]/40'}`}>
+                        ${phase.status === 'completed' ? 'bg-green-100 text-green-600' : 'bg-[#0F172A]/5 text-[#0F172A]/40'}`}>
                         {phase.status === 'completed' ? '✓' : idx + 1}
                       </div>
                       <div>
@@ -267,7 +267,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                             <div className="flex items-center gap-2 flex-shrink-0">
                               {d.file_url && (
                                 <a href={d.file_url} target="_blank" rel="noopener noreferrer"
-                                  className="text-xs text-[#22C55E] font-semibold hover:underline">Download</a>
+                                  className="text-xs text-[#6366F1] font-semibold hover:underline">Download</a>
                               )}
                               <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${statusBadgeClass(d.status)}`}>
                                 {statusLabel(d.status)}
@@ -292,9 +292,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
       {timeEntries && timeEntries.length > 0 && (
         <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 mb-5">
           <div className="flex items-center gap-2 mb-4">
-            <Clock size={15} className="text-[#22C55E]" />
+            <Clock size={15} className="text-[#6366F1]" />
             <h2 className="font-bold text-gray-900">Time Log</h2>
-            <span className="ml-auto text-sm font-bold text-[#22C55E]">
+            <span className="ml-auto text-sm font-bold text-[#6366F1]">
               {totalHours}h {remainingMins}m total
             </span>
           </div>
@@ -327,7 +327,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </div>
           ) : comments.map(comment => (
             <div key={comment.id} className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#0F2D1F] flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">
+              <div className="w-8 h-8 rounded-full bg-[#0F172A] flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">
                 {(comment.author_name ?? comment.author_email)?.[0]?.toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">

@@ -26,7 +26,7 @@ export default function TaskToggle({ taskId, title, isComplete, dueDate }: {
     )} onClick={toggle}>
       <div className={cn(
         'w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-all',
-        complete ? 'bg-green-500 border-green-500' : 'border-gray-300 group-hover:border-[#22C55E]',
+        complete ? 'bg-green-500 border-green-500' : 'border-gray-300 group-hover:border-[#6366F1]',
         loading && 'opacity-50'
       )}>
         {complete && <Check size={10} className="text-white" strokeWidth={3} />}

@@ -25,7 +25,7 @@ export default async function ProjectsPage() {
           <p className="text-sm text-gray-400 mt-0.5">{projects?.length ?? 0} total · {grouped.active.length} active</p>
         </div>
         <Link href="/projects/new"
-          className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16a34a] text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md">
+          className="inline-flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md">
           <Plus size={16} />
           <span className="hidden sm:inline">New Project</span>
           <span className="sm:hidden">New</span>
@@ -40,7 +40,7 @@ export default async function ProjectsPage() {
           <p className="font-semibold text-gray-700 mb-1">No projects yet</p>
           <p className="text-gray-400 text-sm mb-6">Create your first project to start tracking.</p>
           <Link href="/projects/new"
-            className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16a34a] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all">
+            className="inline-flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all">
             <Plus size={15} /> Create Project
           </Link>
         </div>
@@ -70,7 +70,7 @@ export default async function ProjectsPage() {
                         {client && <p className="text-xs text-gray-400 flex items-center gap-1 mb-3"><Building2 size={11} />{client.name}</p>}
                         <div className="flex items-center gap-2 mb-2">
                           <div className="flex-1 bg-gray-100 rounded-full h-1.5">
-                            <div className="bg-[#22C55E] h-1.5 rounded-full" style={{ width: `${progress}%` }} />
+                            <div className="bg-[#6366F1] h-1.5 rounded-full" style={{ width: `${progress}%` }} />
                           </div>
                           <span className="text-xs font-medium text-gray-500 tabular-nums w-8 text-right">{progress}%</span>
                         </div>
@@ -99,7 +99,7 @@ export default async function ProjectsPage() {
                             <td className="px-5 py-4 w-48">
                               <div className="flex items-center gap-2">
                                 <div className="flex-1 bg-gray-100 rounded-full h-1.5">
-                                  <div className="bg-[#22C55E] h-1.5 rounded-full" style={{ width: `${progress}%` }} />
+                                  <div className="bg-[#6366F1] h-1.5 rounded-full" style={{ width: `${progress}%` }} />
                                 </div>
                                 <span className="text-xs text-gray-400 tabular-nums w-8">{progress}%</span>
                               </div>
@@ -109,7 +109,7 @@ export default async function ProjectsPage() {
                             </td>
                             <td className="px-5 py-4 w-16 text-right">
                               <Link href={`/projects/${project.id}`}
-                                className="inline-flex items-center gap-1 text-[#22C55E] hover:text-[#16a34a] font-semibold text-xs transition-colors">
+                                className="inline-flex items-center gap-1 text-[#6366F1] hover:text-[#4f46e5] font-semibold text-xs transition-colors">
                                 Open <ArrowRight size={12} />
                               </Link>
                             </td>

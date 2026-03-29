@@ -24,7 +24,7 @@ export default function AddTaskForm({ phaseId, nextOrder }: { phaseId: string; n
 
   if (!open) return (
     <button onClick={() => setOpen(true)}
-      className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#22C55E] font-medium transition-colors mt-1.5 py-1">
+      className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#6366F1] font-medium transition-colors mt-1.5 py-1">
       <Plus size={13} /> Add task
     </button>
   )
@@ -36,7 +36,7 @@ export default function AddTaskForm({ phaseId, nextOrder }: { phaseId: string; n
         className="flex-1 text-sm focus:outline-none bg-transparent placeholder-gray-400"
         placeholder="Task name…" />
       <button onClick={handleAdd} disabled={loading || !title.trim()}
-        className="bg-[#22C55E] text-white px-2.5 py-1 rounded-lg text-xs font-bold disabled:opacity-50 transition-colors hover:bg-[#16a34a]">
+        className="bg-[#6366F1] text-white px-2.5 py-1 rounded-lg text-xs font-bold disabled:opacity-50 transition-colors hover:bg-[#4f46e5]">
         Add
       </button>
       <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600">

@@ -80,7 +80,7 @@ export default async function ClientProjectPage({ params }: PageProps) {
         {/* Overall progress */}
         <div className="flex items-center gap-3 mb-1.5">
           <div className="flex-1 bg-gray-100 rounded-full h-3">
-            <div className="bg-[#22C55E] h-3 rounded-full transition-all" style={{ width: `${overallProgress}%` }} />
+            <div className="bg-[#6366F1] h-3 rounded-full transition-all" style={{ width: `${overallProgress}%` }} />
           </div>
           <span className="text-sm font-bold text-gray-700 tabular-nums w-10 text-right">{overallProgress}%</span>
         </div>
@@ -139,9 +139,9 @@ export default async function ClientProjectPage({ params }: PageProps) {
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-gray-100 rounded-full h-1.5">
-                        <div className="bg-[#22C55E] h-1.5 rounded-full" style={{ width: `${phase.completion_pct}%` }} />
+                        <div className="bg-[#6366F1] h-1.5 rounded-full" style={{ width: `${phase.completion_pct}%` }} />
                       </div>
-                      <span className="text-xs font-bold text-[#22C55E] tabular-nums w-9 text-right">{phase.completion_pct}%</span>
+                      <span className="text-xs font-bold text-[#6366F1] tabular-nums w-9 text-right">{phase.completion_pct}%</span>
                     </div>
                   </div>
 
@@ -185,7 +185,7 @@ export default async function ClientProjectPage({ params }: PageProps) {
                                 </div>
                                 {d.file_url && (
                                   <a href={d.file_url} target="_blank" rel="noopener noreferrer"
-                                    className="flex items-center gap-1 text-xs text-[#22C55E] font-semibold hover:underline flex-shrink-0">
+                                    className="flex items-center gap-1 text-xs text-[#6366F1] font-semibold hover:underline flex-shrink-0">
                                     <Download size={12} /> File
                                   </a>
                                 )}
@@ -214,7 +214,7 @@ export default async function ClientProjectPage({ params }: PageProps) {
             <div className="text-center py-6 text-sm text-gray-400">No messages yet — start the conversation below.</div>
           ) : comments.map(c => (
             <div key={c.id} className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#0F2D1F] flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">
+              <div className="w-8 h-8 rounded-full bg-[#0F172A] flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">
                 {(c.author_name ?? c.author_email)?.[0]?.toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">

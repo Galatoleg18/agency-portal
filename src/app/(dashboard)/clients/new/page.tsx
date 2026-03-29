@@ -30,7 +30,7 @@ export default function NewClientPage() {
     router.push('/clients')
   }
 
-  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent transition-all"
+  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#6366F1] focus:border-transparent transition-all"
   const labelCls = "block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5"
 
   return (
@@ -73,7 +73,7 @@ export default function NewClientPage() {
 
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={loading}
-            className="flex-1 bg-[#22C55E] hover:bg-[#16a34a] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50">
+            className="flex-1 bg-[#6366F1] hover:bg-[#4f46e5] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50">
             {loading ? 'Saving…' : 'Add Client'}
           </button>
           <Link href="/clients" className="px-5 py-3 border border-gray-200 rounded-xl text-sm text-gray-500 hover:bg-gray-50 transition-colors font-medium">

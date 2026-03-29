@@ -39,7 +39,7 @@ export default async function DashboardPage() {
     { label: 'Clients', value: totalClients ?? 0, icon: Users, color: 'text-violet-500', bg: 'bg-violet-50', href: '/clients' },
     { label: 'Active Projects', value: activeProjects, icon: FolderKanban, color: 'text-sky-500', bg: 'bg-sky-50', href: '/projects' },
     { label: 'Pending Invoices', value: pendingInvoices, icon: FileText, color: overdueInvoices > 0 ? 'text-red-500' : 'text-amber-500', bg: overdueInvoices > 0 ? 'bg-red-50' : 'bg-amber-50', href: '/invoices' },
-    { label: 'Revenue', value: formatCurrency(totalRevenue), icon: DollarSign, color: 'text-[#22C55E]', bg: 'bg-[#22C55E]/10', href: '/invoices' },
+    { label: 'Revenue', value: formatCurrency(totalRevenue), icon: DollarSign, color: 'text-[#6366F1]', bg: 'bg-[#6366F1]/10', href: '/invoices' },
   ]
 
   return (
@@ -101,7 +101,7 @@ export default async function DashboardPage() {
         <div className="lg:col-span-3 bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <div className="px-5 py-4 border-b border-gray-50 flex items-center justify-between">
             <h2 className="font-semibold text-gray-900">Recent Projects</h2>
-            <Link href="/projects" className="text-xs font-semibold text-[#22C55E] hover:text-[#16a34a] flex items-center gap-1">
+            <Link href="/projects" className="text-xs font-semibold text-[#6366F1] hover:text-[#4f46e5] flex items-center gap-1">
               All <ArrowRight size={12} />
             </Link>
           </div>
@@ -131,7 +131,7 @@ export default async function DashboardPage() {
                     </div>
                     <div className="flex items-center gap-2 mt-1.5">
                       <div className="flex-1 bg-gray-100 rounded-full h-1.5 max-w-[120px]">
-                        <div className="bg-[#22C55E] h-1.5 rounded-full" style={{ width: `${progress}%` }} />
+                        <div className="bg-[#6366F1] h-1.5 rounded-full" style={{ width: `${progress}%` }} />
                       </div>
                       <span className="text-xs text-gray-400 tabular-nums">{progress}%</span>
                     </div>
@@ -155,7 +155,7 @@ export default async function DashboardPage() {
         {/* Activity feed */}
         <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <div className="px-5 py-4 border-b border-gray-50 flex items-center gap-2">
-            <Zap size={14} className="text-[#22C55E]" />
+            <Zap size={14} className="text-[#6366F1]" />
             <h2 className="font-semibold text-gray-900">Activity</h2>
           </div>
           <div className="divide-y divide-gray-50 max-h-80 overflow-y-auto scrollbar-hide">
@@ -188,7 +188,7 @@ export default async function DashboardPage() {
             { label: 'Templates', href: '/templates', emoji: '📋' },
           ].map(({ label, href, emoji }) => (
             <Link key={label} href={href}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-100 hover:border-[#22C55E]/40 hover:bg-[#22C55E]/5 transition-all text-center">
+              className="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-100 hover:border-[#6366F1]/40 hover:bg-[#6366F1]/5 transition-all text-center">
               <span className="text-2xl">{emoji}</span>
               <span className="text-xs font-semibold text-gray-600">{label}</span>
             </Link>

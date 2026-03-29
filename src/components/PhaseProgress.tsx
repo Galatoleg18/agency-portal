@@ -26,21 +26,21 @@ export default function PhaseProgress({ phaseId, currentPct }: { phaseId: string
           onChange={e => setPct(Number(e.target.value))}
           onMouseUp={() => save(pct)}
           onTouchEnd={() => save(pct)}
-          className="flex-1 accent-[#22C55E] cursor-pointer h-1.5"
+          className="flex-1 accent-[#6366F1] cursor-pointer h-1.5"
         />
         <div className="flex items-center gap-1 w-16">
           <input
             type="number" min={0} max={100} value={pct}
             onChange={e => setPct(Math.min(100, Math.max(0, Number(e.target.value))))}
             onBlur={() => save(pct)}
-            className="w-12 text-xs font-bold text-[#22C55E] text-center bg-transparent border-0 focus:outline-none"
+            className="w-12 text-xs font-bold text-[#6366F1] text-center bg-transparent border-0 focus:outline-none"
           />
           <span className="text-xs text-gray-400">%</span>
         </div>
         {saving && <span className="text-xs text-gray-400 animate-pulse">saving…</span>}
       </div>
       <div className="w-full bg-gray-100 rounded-full h-1.5">
-        <div className="bg-[#22C55E] h-1.5 rounded-full transition-all" style={{ width: `${pct}%` }} />
+        <div className="bg-[#6366F1] h-1.5 rounded-full transition-all" style={{ width: `${pct}%` }} />
       </div>
     </div>
   )
