@@ -2,13 +2,14 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatDate, statusBadgeClass, statusLabel, formatCurrency } from '@/lib/utils'
-import { ArrowLeft, Calendar, Building2, DollarSign, CheckCircle2, Circle, Plus, TrendingUp } from 'lucide-react'
+import { ArrowLeft, Calendar, Building2, DollarSign, CheckCircle2, Circle, Plus, TrendingUp, Clock } from 'lucide-react'
 import TaskToggle from '@/components/TaskToggle'
 import AddCommentForm from '@/components/AddCommentForm'
 import AddPhaseForm from '@/components/AddPhaseForm'
 import AddTaskForm from '@/components/AddTaskForm'
 import PhaseProgress from '@/components/PhaseProgress'
 import StatusSelect from '@/components/StatusSelect'
+import TimeLogger from '@/components/TimeLogger'
 
 interface PageProps { params: Promise<{ id: string }> }
 
@@ -16,7 +17,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const { id } = await params
   const supabase = await createClient()
 
-  const [{ data: project }, { data: comments }, { data: invoices }] = await Promise.all([
+  const [{ data: project }, { data: comments }, { data: invoices }, { data: timeEntries }] = await Promise.all([
     supabase.from('projects').select(`
       id, name, description, status, start_date, due_date, budget,
       clients(id, name, email, company),
@@ -28,6 +29,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
       .eq('project_id', id).order('created_at', { ascending: true }),
     supabase.from('invoices').select('id, title, amount, status, due_date')
       .eq('project_id', id).order('created_at', { ascending: false }),
+    supabase.from('time_entries').select('id, minutes, description, logged_date, logged_by_email')
+      .eq('project_id', id).order('logged_date', { ascending: false }).limit(20),
   ])
 
   if (!project) notFound()
@@ -57,6 +60,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
   const invoiceTotal = invoices?.reduce((s, i) => s + (i.amount ?? 0), 0) ?? 0
   const invoicePaid = invoices?.filter(i => i.status === 'paid').reduce((s, i) => s + (i.amount ?? 0), 0) ?? 0
+  const totalMinutes = timeEntries?.reduce((s, e) => s + (e.minutes ?? 0), 0) ?? 0
+  const totalHours = Math.floor(totalMinutes / 60)
+  const remainingMins = totalMinutes % 60
 
   return (
     <div>
@@ -123,6 +129,11 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 <p className="text-xs text-gray-400">Overall</p>
                 <p className="text-sm font-bold text-gray-700">{completedTasks}/{totalTasks} tasks</p>
                 <p className="text-xs text-gray-400">{phases.filter(p => p.status === 'completed').length}/{phases.length} phases</p>
+                {totalMinutes > 0 && (
+                  <p className="text-xs text-[#C9A96E] font-semibold mt-0.5 flex items-center gap-1">
+                    <Clock size={10} />{totalHours}h {remainingMins}m logged
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -239,6 +250,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                       </div>
                     )}
                     <AddTaskForm phaseId={phase.id} nextOrder={tasks.length} />
+                    <TimeLogger projectId={id} phaseId={phase.id} userEmail={user?.email ?? ''} />
                   </div>
 
                   {/* Deliverables */}
@@ -275,6 +287,32 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <AddPhaseForm projectId={id} nextOrder={phases.length} />
         </div>
       </div>
+
+      {/* Time log */}
+      {timeEntries && timeEntries.length > 0 && (
+        <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 mb-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Clock size={15} className="text-[#C9A96E]" />
+            <h2 className="font-bold text-gray-900">Time Log</h2>
+            <span className="ml-auto text-sm font-bold text-[#C9A96E]">
+              {totalHours}h {remainingMins}m total
+            </span>
+          </div>
+          <div className="space-y-2">
+            {timeEntries.slice(0, 8).map(entry => (
+              <div key={entry.id} className="flex items-center justify-between gap-3 text-sm py-2 border-b border-gray-50 last:border-0">
+                <div className="flex-1 min-w-0">
+                  <p className="text-gray-700 truncate">{entry.description ?? 'No description'}</p>
+                  <p className="text-xs text-gray-400">{entry.logged_by_email} · {formatDate(entry.logged_date)}</p>
+                </div>
+                <span className="font-semibold text-gray-700 flex-shrink-0 tabular-nums">
+                  {Math.floor(entry.minutes / 60)}h {entry.minutes % 60}m
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Comments */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6">

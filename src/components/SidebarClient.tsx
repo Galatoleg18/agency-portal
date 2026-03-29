@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
-  LayoutDashboard, Users, FolderKanban, FileText, Settings, LogOut, Menu, X,
+  LayoutDashboard, Users, FolderKanban, FileText, Settings, LogOut, Menu, X, LayoutTemplate,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
@@ -14,6 +14,7 @@ const navLinks = [
   { href: '/clients', label: 'Clients', icon: Users },
   { href: '/projects', label: 'Projects', icon: FolderKanban },
   { href: '/invoices', label: 'Invoices', icon: FileText },
+  { href: '/templates', label: 'Templates', icon: LayoutTemplate },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
