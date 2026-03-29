@@ -25,7 +25,7 @@ export default async function InvoicesPage() {
           <p className="text-sm text-gray-400 mt-0.5">{invoices?.length ?? 0} total</p>
         </div>
         <Link href="/invoices/new"
-          className="inline-flex items-center gap-2 bg-[#C9A96E] hover:bg-[#b8924d] text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md">
+          className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16a34a] text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md">
           <Plus size={16} />
           <span className="hidden sm:inline">New Invoice</span>
           <span className="sm:hidden">New</span>
@@ -70,7 +70,7 @@ export default async function InvoicesPage() {
           <p className="font-semibold text-gray-700 mb-1">No invoices yet</p>
           <p className="text-gray-400 text-sm mb-6">Create your first invoice to start tracking payments.</p>
           <Link href="/invoices/new"
-            className="inline-flex items-center gap-2 bg-[#C9A96E] hover:bg-[#b8924d] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all">
+            className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16a34a] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition-all">
             <Plus size={15} /> Create Invoice
           </Link>
         </div>

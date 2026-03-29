@@ -41,7 +41,7 @@ export default function NewInvoicePage() {
     router.push('/invoices')
   }
 
-  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A96E] focus:border-transparent transition-all bg-white"
+  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent transition-all bg-white"
   const labelCls = "block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5"
 
   return (
@@ -106,7 +106,7 @@ export default function NewInvoicePage() {
 
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={loading}
-            className="flex-1 bg-[#C9A96E] hover:bg-[#b8924d] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50">
+            className="flex-1 bg-[#22C55E] hover:bg-[#16a34a] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50">
             {loading ? 'Creating…' : 'Create Invoice'}
           </button>
           <Link href="/invoices" className="px-5 py-3 border border-gray-200 rounded-xl text-sm text-gray-500 hover:bg-gray-50 transition-colors font-medium">

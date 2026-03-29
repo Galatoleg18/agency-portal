@@ -25,20 +25,20 @@ export function formatDate(dateStr: string | null | undefined): string {
 
 export function statusBadgeClass(status: string): string {
   const map: Record<string, string> = {
-    active: 'bg-green-100 text-green-700',
-    on_hold: 'bg-yellow-100 text-yellow-700',
-    completed: 'bg-blue-100 text-blue-700',
-    cancelled: 'bg-red-100 text-red-700',
-    paid: 'bg-green-100 text-green-700',
-    unpaid: 'bg-yellow-100 text-yellow-700',
-    overdue: 'bg-red-100 text-red-700',
-    pending: 'bg-gray-100 text-gray-600',
-    in_progress: 'bg-blue-100 text-blue-700',
-    approved: 'bg-green-100 text-green-700',
-    rejected: 'bg-red-100 text-red-700',
+    active: 'bg-emerald-100 text-emerald-700',
+    on_hold: 'bg-amber-100 text-amber-700',
+    completed: 'bg-sky-100 text-sky-700',
+    cancelled: 'bg-red-100 text-red-600',
+    paid: 'bg-emerald-100 text-emerald-700',
+    unpaid: 'bg-amber-100 text-amber-700',
+    overdue: 'bg-red-100 text-red-600',
+    pending: 'bg-gray-100 text-gray-500',
+    in_progress: 'bg-sky-100 text-sky-700',
+    approved: 'bg-emerald-100 text-emerald-700',
+    rejected: 'bg-red-100 text-red-600',
     revision_requested: 'bg-orange-100 text-orange-700',
   }
-  return map[status] ?? 'bg-gray-100 text-gray-600'
+  return map[status] ?? 'bg-gray-100 text-gray-500'
 }
 
 export function statusLabel(status: string): string {

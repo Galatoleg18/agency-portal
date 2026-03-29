@@ -10,13 +10,13 @@ export default async function ClientPortalLayout({ children }: { children: React
 
   return (
     <div className="min-h-screen bg-[#F5F6FA]">
-      <header className="bg-[#0D1F3C] sticky top-0 z-30 shadow-lg">
+      <header className="bg-[#0F2D1F] sticky top-0 z-30 shadow-lg">
         <div className="max-w-4xl mx-auto px-5 py-4 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/portal">
               <div>
                 <span className="text-xl font-black text-white tracking-tight">DOT IT</span>
-                <div className="w-5 h-0.5 bg-[#C9A96E] mt-0.5 rounded-full" />
+                <div className="w-5 h-0.5 bg-[#22C55E] mt-0.5 rounded-full" />
               </div>
             </Link>
             <nav className="hidden sm:flex items-center gap-4">

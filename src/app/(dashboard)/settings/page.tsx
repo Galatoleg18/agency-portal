@@ -17,20 +17,20 @@ export default async function SettingsPage() {
         {/* Profile */}
         <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6">
           <div className="flex items-center gap-2.5 mb-5">
-            <div className="w-8 h-8 rounded-xl bg-[#C9A96E]/10 flex items-center justify-center">
-              <User size={16} className="text-[#C9A96E]" />
+            <div className="w-8 h-8 rounded-xl bg-[#22C55E]/10 flex items-center justify-center">
+              <User size={16} className="text-[#22C55E]" />
             </div>
             <h2 className="font-bold text-gray-900">Profile</h2>
           </div>
 
           <div className="flex items-center gap-4 mb-5">
-            <div className="w-14 h-14 rounded-2xl bg-[#0D1F3C] flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+            <div className="w-14 h-14 rounded-2xl bg-[#0F2D1F] flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
               {(profile?.full_name ?? user?.email ?? '?')[0]?.toUpperCase()}
             </div>
             <div>
               <p className="font-semibold text-gray-900">{profile?.full_name ?? 'No name set'}</p>
               <p className="text-sm text-gray-400">{user?.email}</p>
-              <span className="inline-block mt-1 text-xs font-semibold bg-[#0D1F3C]/5 text-[#0D1F3C] px-2 py-0.5 rounded-full capitalize">
+              <span className="inline-block mt-1 text-xs font-semibold bg-[#0F2D1F]/5 text-[#0F2D1F] px-2 py-0.5 rounded-full capitalize">
                 {profile?.role ?? 'client'}
               </span>
             </div>
@@ -69,7 +69,7 @@ export default async function SettingsPage() {
                 <p className="text-sm font-medium text-gray-700">Password</p>
                 <p className="text-xs text-gray-400 mt-0.5">Last changed: unknown</p>
               </div>
-              <button className="text-sm font-semibold text-[#C9A96E] hover:text-[#b8924d] transition-colors">
+              <button className="text-sm font-semibold text-[#22C55E] hover:text-[#16a34a] transition-colors">
                 Change →
               </button>
             </div>
@@ -85,8 +85,8 @@ export default async function SettingsPage() {
         {/* Portal info */}
         <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-6">
           <div className="flex items-center gap-2.5 mb-5">
-            <div className="w-8 h-8 rounded-xl bg-[#C9A96E]/10 flex items-center justify-center">
-              <Palette size={16} className="text-[#C9A96E]" />
+            <div className="w-8 h-8 rounded-xl bg-[#22C55E]/10 flex items-center justify-center">
+              <Palette size={16} className="text-[#22C55E]" />
             </div>
             <h2 className="font-bold text-gray-900">Portal</h2>
           </div>
@@ -101,7 +101,7 @@ export default async function SettingsPage() {
             </div>
             <div className="flex justify-between py-2">
               <span className="text-gray-400">Support</span>
-              <a href="mailto:ask.dot.it@gmail.com" className="font-medium text-[#C9A96E] hover:underline">ask.dot.it@gmail.com</a>
+              <a href="mailto:ask.dot.it@gmail.com" className="font-medium text-[#22C55E] hover:underline">ask.dot.it@gmail.com</a>
             </div>
           </div>
         </div>

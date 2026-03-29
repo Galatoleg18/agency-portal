@@ -36,7 +36,7 @@ export default function StatusSelect({ table, id, currentStatus }: { table: Tabl
       value={status}
       onChange={e => handleChange(e.target.value)}
       disabled={loading}
-      className={`rounded-full px-3 py-1 text-xs font-semibold border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#C9A96E] transition-opacity ${statusBadgeClass(status)} ${loading ? 'opacity-50' : ''}`}
+      className={`rounded-full px-3 py-1 text-xs font-semibold border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#22C55E] transition-opacity ${statusBadgeClass(status)} ${loading ? 'opacity-50' : ''}`}
     >
       {optionsByTable[table].map(s => (
         <option key={s} value={s}>{statusLabel(s)}</option>

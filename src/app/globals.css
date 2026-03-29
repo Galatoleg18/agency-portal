@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --gold: #C9A96E;
-  --gold-dark: #b8924d;
-  --navy: #0D1F3C;
-  --navy-light: #162d54;
+  --green: #22C55E;
+  --green-dark: #16a34a;
+  --forest: #0F2D1F;
+  --forest-light: #163d25;
 }
 
 * {
@@ -18,3 +18,8 @@ body {
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Range input accent */
+input[type="range"] {
+  accent-color: #22C55E;
+}

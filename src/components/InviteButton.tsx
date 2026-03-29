@@ -47,7 +47,7 @@ export default function InviteButton({ email, name }: { email: string; name: str
     <button
       onClick={sendInvite}
       disabled={state === 'loading'}
-      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#C9A96E] hover:text-[#b8924d] transition-colors disabled:opacity-50"
+      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#22C55E] hover:text-[#16a34a] transition-colors disabled:opacity-50"
     >
       {state === 'loading'
         ? <><Loader2 size={13} className="animate-spin" /> Sending…</>

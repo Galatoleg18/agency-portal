@@ -77,7 +77,7 @@ export default async function ClientPortalPage() {
 
                 <div className="flex items-center gap-3 mb-3">
                   <div className="flex-1 bg-gray-100 rounded-full h-2">
-                    <div className="bg-[#C9A96E] h-2 rounded-full transition-all" style={{ width: `${progress}%` }} />
+                    <div className="bg-[#22C55E] h-2 rounded-full transition-all" style={{ width: `${progress}%` }} />
                   </div>
                   <span className="text-sm font-bold text-gray-700 tabular-nums w-10 text-right">{progress}%</span>
                 </div>
@@ -89,7 +89,7 @@ export default async function ClientPortalPage() {
                       {doneTasks}/{totalTasks} tasks complete
                     </p>
                   )}
-                  <span className="text-xs font-semibold text-[#C9A96E] flex items-center gap-1 ml-auto">
+                  <span className="text-xs font-semibold text-[#22C55E] flex items-center gap-1 ml-auto">
                     View details <ArrowRight size={12} />
                   </span>
                 </div>

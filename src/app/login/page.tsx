@@ -27,13 +27,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D1F3C] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#0F2D1F] flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-10">
           <div className="inline-block">
             <span className="text-4xl font-black text-white tracking-tight">DOT IT</span>
-            <div className="h-0.5 bg-[#C9A96E] rounded-full mt-1.5" />
+            <div className="h-0.5 bg-[#22C55E] rounded-full mt-1.5" />
           </div>
           <p className="text-white/40 text-sm mt-4">Client Portal</p>
         </div>
@@ -48,7 +48,7 @@ export default function LoginPage() {
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Email</label>
               <input
                 type="email" required value={email} onChange={e => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A96E] focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent transition-all"
                 placeholder="you@example.com"
               />
             </div>
@@ -56,7 +56,7 @@ export default function LoginPage() {
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Password</label>
               <input
                 type="password" required value={password} onChange={e => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A96E] focus:border-transparent transition-all"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#22C55E] focus:border-transparent transition-all"
                 placeholder="••••••••"
               />
             </div>
@@ -68,7 +68,7 @@ export default function LoginPage() {
             )}
 
             <button type="submit" disabled={loading}
-              className="w-full bg-[#C9A96E] hover:bg-[#b8924d] text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-60 text-sm tracking-wide mt-2">
+              className="w-full bg-[#22C55E] hover:bg-[#16a34a] text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-60 text-sm tracking-wide mt-2">
               {loading ? 'Signing in…' : 'Sign In'}
             </button>
           </form>

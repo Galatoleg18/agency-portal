@@ -19,7 +19,7 @@ export default async function ClientsPage() {
           <p className="text-sm text-gray-400 mt-0.5">{clients?.length ?? 0} total</p>
         </div>
         <Link href="/clients/new"
-          className="flex items-center gap-2 bg-[#C9A96E] hover:bg-[#b8924d] text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm hover:shadow-md">
+          className="flex items-center gap-2 bg-[#22C55E] hover:bg-[#16a34a] text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm hover:shadow-md">
           <Plus size={16} />
           <span className="hidden sm:inline">Add Client</span>
           <span className="sm:hidden">Add</span>
@@ -34,7 +34,7 @@ export default async function ClientsPage() {
           <p className="font-semibold text-gray-700 mb-1">No clients yet</p>
           <p className="text-gray-400 text-sm mb-6">Add your first client to get started.</p>
           <Link href="/clients/new"
-            className="inline-flex items-center gap-2 bg-[#C9A96E] hover:bg-[#b8924d] text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all">
+            className="inline-flex items-center gap-2 bg-[#22C55E] hover:bg-[#16a34a] text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all">
             <Plus size={15} /> Add Client
           </Link>
         </div>
@@ -50,9 +50,9 @@ export default async function ClientsPage() {
                     <h3 className="font-bold text-gray-900 truncate">{client.name}</h3>
                     {client.company && <p className="text-sm text-gray-400 mt-0.5 truncate">{client.company}</p>}
                   </div>
-                  <div className="flex items-center gap-1.5 bg-[#0D1F3C]/5 rounded-xl px-2.5 py-1 flex-shrink-0">
-                    <FolderKanban size={13} className="text-[#0D1F3C]/50" />
-                    <span className="text-xs font-bold text-[#0D1F3C]/60">{projectCount}</span>
+                  <div className="flex items-center gap-1.5 bg-[#0F2D1F]/5 rounded-xl px-2.5 py-1 flex-shrink-0">
+                    <FolderKanban size={13} className="text-[#0F2D1F]/50" />
+                    <span className="text-xs font-bold text-[#0F2D1F]/60">{projectCount}</span>
                   </div>
                 </div>
 
@@ -76,7 +76,7 @@ export default async function ClientsPage() {
                 {/* Actions */}
                 <div className="pt-3 border-t border-gray-50 flex items-center justify-between">
                   <Link href={`/projects?client=${client.id}`}
-                    className="text-sm text-[#C9A96E] hover:text-[#b8924d] font-semibold transition-colors">
+                    className="text-sm text-[#22C55E] hover:text-[#16a34a] font-semibold transition-colors">
                     View projects →
                   </Link>
                   <InviteButton email={client.email} name={client.name} />
