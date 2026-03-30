@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
   const { email, name } = await req.json()
   if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 })
 
-  // Use service role key for admin invite
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!serviceKey) {
     return NextResponse.json({ error: 'Server not configured for invites. Add SUPABASE_SERVICE_ROLE_KEY env var.' }, { status: 500 })
@@ -28,11 +27,44 @@ export async function POST(req: NextRequest) {
     serviceKey
   )
 
+  // Check if user already exists
+  const { data: existingUsers } = await admin.auth.admin.listUsers()
+  const existingUser = existingUsers?.users?.find(u => u.email === email)
+
+  if (existingUser) {
+    // User exists — send password reset email so they can set/reset their password
+    const { error: resetError } = await admin.auth.admin.generateLink({
+      type: 'recovery',
+      email,
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+      },
+    })
+
+    // generateLink doesn't send the email — use resetPasswordForEmail via anon client trick
+    // Instead, use admin to generate and we send via supabase auth
+    const anonSupabase = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+
+    const { error: sendError } = await anonSupabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+    })
+
+    if (sendError && resetError) {
+      return NextResponse.json({ error: sendError.message }, { status: 400 })
+    }
+
+    return NextResponse.json({ success: true, type: 'reset', message: 'Password reset email sent' })
+  }
+
+  // New user — send invite
   const { data, error } = await admin.auth.admin.inviteUserByEmail(email, {
     data: { full_name: name, role: 'client' },
     redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
   })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
-  return NextResponse.json({ success: true, user: data.user })
+  return NextResponse.json({ success: true, type: 'invite', user: data.user })
 }
