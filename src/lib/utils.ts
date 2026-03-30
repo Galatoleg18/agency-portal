@@ -29,6 +29,7 @@ export function statusBadgeClass(status: string): string {
     on_hold: 'bg-amber-100 text-amber-700',
     completed: 'bg-sky-100 text-sky-700',
     cancelled: 'bg-red-100 text-red-600',
+    archived: 'bg-gray-100 text-gray-500',
     paid: 'bg-emerald-100 text-emerald-700',
     unpaid: 'bg-amber-100 text-amber-700',
     overdue: 'bg-red-100 text-red-600',

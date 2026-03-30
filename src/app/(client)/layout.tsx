@@ -9,7 +9,7 @@ export default async function ClientPortalLayout({ children }: { children: React
   if (!user) redirect('/login')
 
   return (
-    <div className="min-h-screen bg-[#F5F6FA]">
+    <div className="min-h-screen bg-[#F5F6FA] overflow-x-hidden">
       <header className="bg-white border-b border-gray-100 sticky top-0 z-30 shadow-sm">
         <div className="max-w-4xl mx-auto px-5 py-4 flex items-center justify-between">
           <div className="flex items-center gap-8">
@@ -22,6 +22,7 @@ export default async function ClientPortalLayout({ children }: { children: React
             <nav className="hidden sm:flex items-center gap-5">
               <Link href="/portal" className="text-sm text-gray-500 hover:text-gray-900 transition-colors font-medium">Projects</Link>
               <Link href="/portal/invoices" className="text-sm text-gray-500 hover:text-gray-900 transition-colors font-medium">Invoices</Link>
+              <Link href="/portal/profile" className="text-sm text-gray-500 hover:text-gray-900 transition-colors font-medium">Profile</Link>
             </nav>
           </div>
           <div className="flex items-center gap-3">

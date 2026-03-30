@@ -11,6 +11,7 @@ import PhaseProgress from '@/components/PhaseProgress'
 import StatusSelect from '@/components/StatusSelect'
 import TimeLogger from '@/components/TimeLogger'
 import ShareStatusButton from '@/components/ShareStatusButton'
+import ProjectActions from '@/components/ProjectActions'
 
 interface PageProps { params: Promise<{ id: string }> }
 
@@ -118,6 +119,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           {/* Actions */}
           <div className="flex flex-col gap-2 flex-shrink-0 items-end">
             <ShareStatusButton projectId={project.id} />
+            <ProjectActions projectId={project.id} isArchived={project.status === 'archived'} />
           </div>
 
         {/* Progress ring */}

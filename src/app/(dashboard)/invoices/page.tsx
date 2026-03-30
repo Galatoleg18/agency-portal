@@ -110,7 +110,7 @@ export default async function InvoicesPage() {
           </div>
 
           {/* Desktop table */}
-          <div className="hidden sm:block bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="hidden sm:block bg-white rounded-2xl border border-gray-100 overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-50 bg-gray-50/50">

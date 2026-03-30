@@ -15,6 +15,7 @@ export default async function ProjectsPage() {
     on_hold: projects?.filter(p => p.status === 'on_hold') ?? [],
     completed: projects?.filter(p => p.status === 'completed') ?? [],
     cancelled: projects?.filter(p => p.status === 'cancelled') ?? [],
+    archived: projects?.filter(p => p.status === 'archived') ?? [],
   }
 
   return (
@@ -22,7 +23,7 @@ export default async function ProjectsPage() {
       <div className="flex items-center justify-between mb-7">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Projects</h1>
-          <p className="text-sm text-gray-400 mt-0.5">{projects?.length ?? 0} total · {grouped.active.length} active</p>
+          <p className="text-sm text-gray-400 mt-0.5">{projects?.filter(p => p.status !== 'archived').length ?? 0} total · {grouped.active.length} active</p>
         </div>
         <Link href="/projects/new"
           className="inline-flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md">
@@ -83,7 +84,7 @@ export default async function ProjectsPage() {
                 </div>
 
                 {/* Desktop table */}
-                <div className="hidden sm:block bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <div className="hidden sm:block bg-white rounded-2xl border border-gray-100 overflow-x-auto">
                   <table className="w-full text-sm">
                     <tbody>
                       {items.map(project => {

@@ -1,58 +1,105 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Plus, Building2, Mail, Phone, FolderKanban } from 'lucide-react'
+import { Plus, Building2, Mail, Phone, FolderKanban, Archive } from 'lucide-react'
 import InviteButton from '@/components/InviteButton'
+import ClientCardMenu from '@/components/ClientCardMenu'
+import ClientsArchiveToggle from '@/components/ClientsArchiveToggle'
 
-export default async function ClientsPage() {
+interface SearchParams { showArchived?: string }
+
+export default async function ClientsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const supabase = await createClient()
+  const params = await searchParams
+  const showArchived = params.showArchived === '1'
 
-  const { data: clients } = await supabase
+  const query = supabase
     .from('clients')
-    .select(`id, name, email, phone, company, notes, projects(count)`)
+    .select(`id, name, email, phone, company, notes, archived_at, projects(count)`)
     .order('created_at', { ascending: false })
+
+  if (showArchived) {
+    query.not('archived_at', 'is', null)
+  } else {
+    query.is('archived_at', null)
+  }
+
+  const { data: clients } = await query
+
+  const archivedCountResult = await supabase
+    .from('clients')
+    .select('id', { count: 'exact', head: true })
+    .not('archived_at', 'is', null)
+  const archivedCount = archivedCountResult.count ?? 0
 
   return (
     <div className="max-w-6xl">
       <div className="flex items-center justify-between mb-7">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
-          <p className="text-sm text-gray-400 mt-0.5">{clients?.length ?? 0} total</p>
+          <p className="text-sm text-gray-400 mt-0.5">
+            {clients?.length ?? 0} {showArchived ? 'archived' : 'active'}
+            {!showArchived && archivedCount > 0 && (
+              <span className="ml-2 text-gray-300">· {archivedCount} archived</span>
+            )}
+          </p>
         </div>
-        <Link href="/clients/new"
-          className="flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm hover:shadow-md">
-          <Plus size={16} />
-          <span className="hidden sm:inline">Add Client</span>
-          <span className="sm:hidden">Add</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          {archivedCount > 0 || showArchived ? (
+            <ClientsArchiveToggle showArchived={showArchived} archivedCount={archivedCount} />
+          ) : null}
+          <Link href="/clients/new"
+            className="flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm hover:shadow-md">
+            <Plus size={16} />
+            <span className="hidden sm:inline">Add Client</span>
+            <span className="sm:hidden">Add</span>
+          </Link>
+        </div>
       </div>
+
+      {showArchived && (
+        <div className="mb-5 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 flex items-center gap-2 text-sm text-amber-700">
+          <Archive size={15} />
+          Showing archived clients
+        </div>
+      )}
 
       {!clients?.length ? (
         <div className="bg-white rounded-2xl border border-gray-100 p-14 text-center">
           <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <Building2 size={28} className="text-gray-300" />
           </div>
-          <p className="font-semibold text-gray-700 mb-1">No clients yet</p>
-          <p className="text-gray-400 text-sm mb-6">Add your first client to get started.</p>
-          <Link href="/clients/new"
-            className="inline-flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all">
-            <Plus size={15} /> Add Client
-          </Link>
+          <p className="font-semibold text-gray-700 mb-1">
+            {showArchived ? 'No archived clients' : 'No clients yet'}
+          </p>
+          <p className="text-gray-400 text-sm mb-6">
+            {showArchived ? 'Archived clients will appear here.' : 'Add your first client to get started.'}
+          </p>
+          {!showArchived && (
+            <Link href="/clients/new"
+              className="inline-flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all">
+              <Plus size={15} /> Add Client
+            </Link>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {clients.map((client) => {
             const projectCount = (client.projects as unknown as { count: number }[])?.[0]?.count ?? 0
+            const isArchived = !!client.archived_at
             return (
-              <div key={client.id} className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md transition-all hover:-translate-y-0.5">
+              <div key={client.id} className={`bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md transition-all hover:-translate-y-0.5 ${isArchived ? 'opacity-75' : ''}`}>
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1 min-w-0 pr-2">
                     <h3 className="font-bold text-gray-900 truncate">{client.name}</h3>
                     {client.company && <p className="text-sm text-gray-400 mt-0.5 truncate">{client.company}</p>}
                   </div>
-                  <div className="flex items-center gap-1.5 bg-[#0F172A]/5 rounded-xl px-2.5 py-1 flex-shrink-0">
-                    <FolderKanban size={13} className="text-[#0F172A]/50" />
-                    <span className="text-xs font-bold text-[#0F172A]/60">{projectCount}</span>
+                  <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1.5 bg-[#0F172A]/5 rounded-xl px-2.5 py-1 flex-shrink-0">
+                      <FolderKanban size={13} className="text-[#0F172A]/50" />
+                      <span className="text-xs font-bold text-[#0F172A]/60">{projectCount}</span>
+                    </div>
+                    <ClientCardMenu clientId={client.id} isArchived={isArchived} />
                   </div>
                 </div>
 
