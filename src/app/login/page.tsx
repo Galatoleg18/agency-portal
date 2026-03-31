@@ -33,9 +33,14 @@ export default function LoginPage() {
     setLoading(true)
     setError(null)
     const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) { setError('Invalid email or password.'); setLoading(false); return }
-    router.push('/dashboard')
+
+    // Route by role — clients go to /portal, admins/staff go to /dashboard
+    const { data: profile } = await supabase
+      .from('profiles').select('role').eq('id', authData.user.id).single()
+    const role = profile?.role ?? 'client'
+    router.push(role === 'client' ? '/portal' : '/dashboard')
     router.refresh()
   }
 
