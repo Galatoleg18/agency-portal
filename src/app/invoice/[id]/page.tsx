@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { formatDate } from '@/lib/utils'
+import PrintBar from './PrintBar'
 
 interface PageProps { params: Promise<{ id: string }> }
 
@@ -99,12 +100,6 @@ export default async function InvoicePDFPage({ params }: PageProps) {
           .notes-text { font-size:12px; color:#475569; line-height:1.7; }
           /* Footer */
           .footer { margin-top:52px; padding-top:20px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; font-size:11px; color:#94a3b8; }
-          /* Print button */
-          .print-bar { position:fixed; top:0; left:0; right:0; background:white; border-bottom:1px solid #e2e8f0; padding:12px 24px; display:flex; align-items:center; justify-content:space-between; z-index:100; box-shadow:0 2px 8px rgba(0,0,0,.06); }
-          .print-bar-left { font-size:13px; font-weight:600; color:#0f172a; }
-          .print-bar-right { display:flex; gap:8px; }
-          .btn-print { background:#6366F1; color:white; border:none; padding:9px 20px; border-radius:9px; font-weight:700; font-size:13px; cursor:pointer; }
-          .btn-close { background:#f1f5f9; color:#475569; border:none; padding:9px 16px; border-radius:9px; font-weight:600; font-size:13px; cursor:pointer; }
           body { padding-top:60px; }
           @media print {
             body { background:white; padding-top:0; }
@@ -115,14 +110,8 @@ export default async function InvoicePDFPage({ params }: PageProps) {
         `}</style>
       </head>
       <body>
-        {/* Print bar */}
-        <div className="print-bar">
-          <span className="print-bar-left">{invNum} — {client?.name ?? 'Invoice'}</span>
-          <div className="print-bar-right">
-            <button className="btn-print" onClick={() => window.print()}>⬇ Download PDF</button>
-            <button className="btn-close" onClick={() => window.history.back()}>← Back</button>
-          </div>
-        </div>
+        {/* Print bar — client component for onClick handlers */}
+        <PrintBar invNum={invNum} clientName={client?.name ?? 'Invoice'} />
 
         <div className="wrap">
 
