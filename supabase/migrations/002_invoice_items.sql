@@ -57,3 +57,11 @@ CREATE POLICY "invoice_items: client sees own" ON invoice_items
         AND c.email = (SELECT email FROM auth.users WHERE id = auth.uid())
     )
   );
+
+-- Allow public read of invoices by ID (for client-facing PDF links, no login needed)
+CREATE POLICY "invoices: public read by id" ON invoices
+  FOR SELECT USING (true);
+
+-- Allow public read of invoice_items by invoice_id
+CREATE POLICY "invoice_items: public read" ON invoice_items
+  FOR SELECT USING (true);
