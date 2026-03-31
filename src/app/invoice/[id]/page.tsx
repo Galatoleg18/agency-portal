@@ -103,9 +103,9 @@ export default async function InvoicePDFPage({ params }: PageProps) {
           body { padding-top:60px; }
           @media print {
             body { background:white; padding-top:0; }
-            .print-bar { display:none !important; }
             .wrap { margin:0; padding:40px; border-radius:0; box-shadow:none; }
             * { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+            @page { margin:0; size:A4; }
           }
         `}</style>
       </head>
@@ -168,10 +168,12 @@ export default async function InvoicePDFPage({ params }: PageProps) {
           <table>
             <thead>
               <tr>
-                <th style={{width:'50%'}}>Description</th>
-                <th className="r" style={{width:'12%'}}>Qty</th>
-                <th className="r" style={{width:'18%'}}>Unit Price</th>
-                <th className="r" style={{width:'18%'}}>Amount</th>
+                <th style={{width: items.length > 0 ? '50%' : '80%'}}>Description</th>
+                {items.length > 0 && <>
+                  <th className="r" style={{width:'12%'}}>Qty</th>
+                  <th className="r" style={{width:'18%'}}>Unit Price</th>
+                </>}
+                <th className="r" style={{width: items.length > 0 ? '18%' : '20%'}}>Amount</th>
               </tr>
             </thead>
             <tbody>
@@ -184,9 +186,8 @@ export default async function InvoicePDFPage({ params }: PageProps) {
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={4}>
-                    <div style={{fontWeight:500,color:'#0f172a'}}>{invoice.title}</div>
-                  </td>
+                  <td><div style={{fontWeight:500,color:'#0f172a'}}>{invoice.title}</div></td>
+                  <td className="r">{fmt(invoice.amount ?? 0)}</td>
                 </tr>
               )}
             </tbody>
