@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatCurrency, formatDate, statusBadgeClass, statusLabel } from '@/lib/utils'
-import { FileText, Plus, AlertCircle, TrendingUp, Download, Archive, Trash2, ArchiveRestore } from 'lucide-react'
+import { FileText, Plus, AlertCircle, TrendingUp, Download, Archive, Trash2, ArchiveRestore, Pencil } from 'lucide-react'
 import StatusSelect from '@/components/StatusSelect'
 import InvoiceActions from '@/components/InvoiceActions'
 
@@ -163,6 +163,10 @@ export default async function InvoicesPage({ searchParams }: Props) {
                           <Link href={`/invoice/${invoice.id}`} target="_blank"
                             className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#6366F1] transition-colors">
                             <Download size={12} /> PDF
+                          </Link>
+                          <Link href={`/invoices/${invoice.id}/edit`}
+                            className="inline-flex items-center justify-center w-7 h-7 rounded-lg text-gray-300 hover:text-[#6366F1] hover:bg-indigo-50 transition-all">
+                            <Pencil size={13} />
                           </Link>
                           <InvoiceActions id={invoice.id} isArchived={invoice.status === 'archived'} />
                         </div>
