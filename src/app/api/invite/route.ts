@@ -17,6 +17,10 @@ export async function POST(req: NextRequest) {
   const { email, name } = await req.json()
   if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 })
 
+  // Derive app URL from the request itself — reliable regardless of env var
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ||
+    `${req.nextUrl.protocol}//${req.nextUrl.host}`
+
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!serviceKey) {
     return NextResponse.json({ error: 'Server not configured for invites. Add SUPABASE_SERVICE_ROLE_KEY env var.' }, { status: 500 })
@@ -37,19 +41,17 @@ export async function POST(req: NextRequest) {
       type: 'recovery',
       email,
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+        redirectTo: `${appUrl}/auth/callback`,
       },
     })
 
-    // generateLink doesn't send the email — use resetPasswordForEmail via anon client trick
-    // Instead, use admin to generate and we send via supabase auth
     const anonSupabase = createAdminClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
 
     const { error: sendError } = await anonSupabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+      redirectTo: `${appUrl}/auth/callback`,
     })
 
     if (sendError && resetError) {
@@ -62,7 +64,7 @@ export async function POST(req: NextRequest) {
   // New user — send invite
   const { data, error } = await admin.auth.admin.inviteUserByEmail(email, {
     data: { full_name: name, role: 'client' },
-    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+    redirectTo: `${appUrl}/auth/callback`,
   })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
