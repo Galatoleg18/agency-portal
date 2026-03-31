@@ -65,3 +65,8 @@ CREATE POLICY "invoices: public read by id" ON invoices
 -- Allow public read of invoice_items by invoice_id
 CREATE POLICY "invoice_items: public read" ON invoice_items
   FOR SELECT USING (true);
+
+-- Allow 'archived' as a valid invoice status
+ALTER TABLE invoices DROP CONSTRAINT IF EXISTS invoices_status_check;
+ALTER TABLE invoices ADD CONSTRAINT invoices_status_check
+  CHECK (status IN ('unpaid', 'paid', 'overdue', 'cancelled', 'archived'));

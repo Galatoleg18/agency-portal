@@ -1,15 +1,24 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatCurrency, formatDate, statusBadgeClass, statusLabel } from '@/lib/utils'
-import { FileText, Plus, AlertCircle, TrendingUp, Download } from 'lucide-react'
+import { FileText, Plus, AlertCircle, TrendingUp, Download, Archive, Trash2, ArchiveRestore } from 'lucide-react'
 import StatusSelect from '@/components/StatusSelect'
+import InvoiceActions from '@/components/InvoiceActions'
 
-export default async function InvoicesPage() {
+interface Props { searchParams: Promise<{ archived?: string }> }
+
+export default async function InvoicesPage({ searchParams }: Props) {
+  const { archived } = await searchParams
+  const showArchived = archived === '1'
   const supabase = await createClient()
-  const { data: invoices } = await supabase
+  const query = supabase
     .from('invoices')
-    .select(`id, title, amount, status, due_date, paid_date, notes, clients(name), projects(name)`)
+    .select(`id, title, amount, status, due_date, paid_date, notes, invoice_number, clients(name), projects(name)`)
     .order('created_at', { ascending: false })
+
+  const { data: invoices } = showArchived
+    ? await query.eq('status', 'archived')
+    : await query.neq('status', 'archived')
 
   const totalAll = invoices?.reduce((s, i) => s + (i.amount ?? 0), 0) ?? 0
   const totalPaid = invoices?.filter(i => i.status === 'paid').reduce((s, i) => s + (i.amount ?? 0), 0) ?? 0
@@ -24,12 +33,18 @@ export default async function InvoicesPage() {
           <h1 className="text-2xl font-bold text-gray-900">Invoices</h1>
           <p className="text-sm text-gray-400 mt-0.5">{invoices?.length ?? 0} total</p>
         </div>
-        <Link href="/invoices/new"
-          className="inline-flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md">
-          <Plus size={16} />
-          <span className="hidden sm:inline">New Invoice</span>
-          <span className="sm:hidden">New</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href={showArchived ? '/invoices' : '/invoices?archived=1'}
+            className="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-500 hover:text-gray-800 text-sm font-semibold px-3 py-2.5 rounded-xl transition-all">
+            {showArchived ? <><ArchiveRestore size={15}/><span className="hidden sm:inline">Active</span></> : <><Archive size={15}/><span className="hidden sm:inline">Archived</span></>}
+          </Link>
+          <Link href="/invoices/new"
+            className="inline-flex items-center gap-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-md">
+            <Plus size={16} />
+            <span className="hidden sm:inline">New Invoice</span>
+            <span className="sm:hidden">New</span>
+          </Link>
+        </div>
       </div>
 
       {invoices && invoices.length > 0 && (
@@ -98,10 +113,13 @@ export default async function InvoicesPage() {
                       <p className="text-xs text-gray-400">
                         {invoice.status === 'paid' ? `Paid ${formatDate(invoice.paid_date)}` : `Due ${formatDate(invoice.due_date)}`}
                       </p>
-                      <Link href={`/invoice/${invoice.id}`} target="_blank"
-                        className="text-xs text-gray-400 hover:text-[#6366F1] transition-colors flex items-center gap-1">
-                        <Download size={12} /> PDF
-                      </Link>
+                      <div className="flex items-center gap-3">
+                        <Link href={`/invoice/${invoice.id}`} target="_blank"
+                          className="text-xs text-gray-400 hover:text-[#6366F1] transition-colors flex items-center gap-1">
+                          <Download size={12} /> PDF
+                        </Link>
+                        <InvoiceActions id={invoice.id} isArchived={invoice.status === 'archived'} />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -141,10 +159,13 @@ export default async function InvoicesPage() {
                         {invoice.status === 'paid' ? formatDate(invoice.paid_date) : formatDate(invoice.due_date)}
                       </td>
                       <td className="px-5 py-3.5">
-                        <Link href={`/invoice/${invoice.id}`} target="_blank"
-                          className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#6366F1] transition-colors">
-                          <Download size={12} /> PDF
-                        </Link>
+                        <div className="flex items-center gap-3">
+                          <Link href={`/invoice/${invoice.id}`} target="_blank"
+                            className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-[#6366F1] transition-colors">
+                            <Download size={12} /> PDF
+                          </Link>
+                          <InvoiceActions id={invoice.id} isArchived={invoice.status === 'archived'} />
+                        </div>
                       </td>
                     </tr>
                   )
