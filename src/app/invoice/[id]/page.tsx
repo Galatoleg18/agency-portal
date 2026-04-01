@@ -33,7 +33,7 @@ export default async function InvoicePDFPage({ params }: PageProps) {
 
   const client = (invoice.clients as any)?.[0] ?? null
   const project = (invoice.projects as any)?.[0] ?? null
-  const invNum = (invoice as any).invoice_number ?? `INV-${id.slice(0, 8).toUpperCase()}`
+  const invNum = (invoice as any).invoice_number ?? `DI-${id.slice(0, 8).toUpperCase()}`
   const items = rawItems ?? []
 
   const subtotal = items.length
@@ -46,12 +46,13 @@ export default async function InvoicePDFPage({ params }: PageProps) {
 
   const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n)
 
-  const statusMap: Record<string, { label: string; color: string; bg: string }> = {
-    paid:    { label: 'PAID',    color: '#065f46', bg: '#d1fae5' },
-    unpaid:  { label: 'UNPAID',  color: '#92400e', bg: '#fef3c7' },
-    overdue: { label: 'OVERDUE', color: '#991b1b', bg: '#fee2e2' },
+  const statusMap: Record<string, { label: string; color: string; bg: string; dot: string }> = {
+    paid:     { label: 'PAID',      color: '#065f46', bg: '#d1fae5', dot: '#10b981' },
+    unpaid:   { label: 'UNPAID',    color: '#92400e', bg: '#fef3c7', dot: '#f59e0b' },
+    overdue:  { label: 'OVERDUE',   color: '#991b1b', bg: '#fee2e2', dot: '#ef4444' },
+    archived: { label: 'ARCHIVED',  color: '#475569', bg: '#f1f5f9', dot: '#94a3b8' },
   }
-  const st = statusMap[invoice.status] ?? { label: invoice.status.toUpperCase(), color: '#475569', bg: '#f1f5f9' }
+  const st = statusMap[invoice.status] ?? { label: invoice.status.toUpperCase(), color: '#475569', bg: '#f1f5f9', dot: '#94a3b8' }
 
   return (
     <html lang="en">
@@ -61,150 +62,146 @@ export default async function InvoicePDFPage({ params }: PageProps) {
         <title>{invNum} · {client?.name ?? 'Invoice'}</title>
         <style>{`
           *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-          html, body { background:#f0f2f5; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif; color:#1e293b; -webkit-font-smoothing:antialiased; }
-          body { padding: 80px 20px 48px; }
+          html, body { background:#eef0f4; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif; color:#1e293b; -webkit-font-smoothing:antialiased; font-size:14px; }
+          body { padding: 80px 16px 48px; }
 
-          .invoice { background:#fff; max-width:800px; margin:0 auto; border-radius:4px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.08),0 8px 32px rgba(0,0,0,.06); }
+          .sheet { background:#fff; max-width:760px; margin:0 auto; box-shadow:0 2px 8px rgba(0,0,0,.08),0 16px 48px rgba(0,0,0,.07); }
 
-          /* Top accent bar */
-          .accent-bar { height:6px; background:linear-gradient(90deg,#6366F1,#8b5cf6); }
+          /* Left stripe */
+          .stripe { width:5px; background:linear-gradient(180deg,#6366F1 0%,#8b5cf6 100%); flex-shrink:0; }
 
           /* Header */
-          .inv-header { padding:44px 52px 36px; display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid #f1f5f9; }
-          .brand-name { font-size:22px; font-weight:900; letter-spacing:2px; color:#0f172a; text-transform:uppercase; }
-          .brand-sub { font-size:11px; color:#94a3b8; letter-spacing:1px; margin-top:4px; }
-          .inv-title-block { text-align:right; }
-          .inv-label { font-size:11px; font-weight:700; letter-spacing:2px; color:#94a3b8; text-transform:uppercase; margin-bottom:6px; }
-          .inv-number { font-size:26px; font-weight:800; color:#0f172a; letter-spacing:-0.5px; }
-          .status-pill { display:inline-block; margin-top:10px; padding:5px 14px; border-radius:4px; font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; background:${st.bg}; color:${st.color}; }
+          .inv-head { display:flex; }
+          .inv-head-inner { flex:1; padding:36px 40px 28px; display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid #f1f5f9; }
+          .brand { }
+          .brand-name { font-size:18px; font-weight:900; letter-spacing:2.5px; color:#0f172a; text-transform:uppercase; }
+          .brand-tagline { font-size:9.5px; color:#94a3b8; letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
+          .inv-id-block { text-align:right; }
+          .inv-id-label { font-size:9px; font-weight:700; letter-spacing:2px; color:#94a3b8; text-transform:uppercase; }
+          .inv-id-num { font-size:20px; font-weight:800; color:#0f172a; letter-spacing:1px; font-variant-numeric:tabular-nums; margin-top:4px; }
+          .status-badge { display:inline-flex; align-items:center; gap:5px; margin-top:8px; padding:4px 10px; border-radius:3px; font-size:9.5px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; background:${st.bg}; color:${st.color}; }
+          .status-dot { width:5px; height:5px; border-radius:50%; background:${st.dot}; }
 
-          /* Meta row */
-          .meta-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; border-bottom:1px solid #f1f5f9; }
-          .meta-cell { padding:28px 52px; border-right:1px solid #f1f5f9; }
-          .meta-cell:last-child { border-right:none; }
-          .meta-label { font-size:9px; font-weight:700; letter-spacing:1.5px; color:#94a3b8; text-transform:uppercase; margin-bottom:8px; }
-          .meta-value { font-size:14px; font-weight:600; color:#0f172a; line-height:1.5; }
-          .meta-value.muted { font-size:12px; font-weight:400; color:#64748b; }
-          .meta-value.overdue { color:#dc2626; }
-          .meta-value.paid { color:#059669; }
+          /* Meta 3-col */
+          .meta { display:grid; grid-template-columns:1fr 1fr 1fr; border-bottom:1px solid #f1f5f9; }
+          .meta-col { padding:20px 40px; border-right:1px solid #f1f5f9; }
+          .meta-col:last-child { border-right:none; }
+          .ml { font-size:8.5px; font-weight:700; letter-spacing:1.5px; color:#94a3b8; text-transform:uppercase; margin-bottom:6px; }
+          .mv { font-size:13px; font-weight:600; color:#0f172a; line-height:1.5; }
+          .mv-sm { font-size:11.5px; font-weight:400; color:#64748b; line-height:1.5; }
+          .mv-ok  { color:#059669; font-weight:600; }
+          .mv-bad { color:#dc2626; font-weight:600; }
 
-          /* Items */
-          .items-section { padding:36px 52px; }
-          .items-table { width:100%; border-collapse:collapse; }
-          .items-table thead th {
-            font-size:9px; font-weight:700; letter-spacing:1.5px; color:#94a3b8;
-            text-transform:uppercase; padding:0 0 14px; border-bottom:2px solid #f1f5f9;
-            text-align:left;
-          }
-          .items-table thead th.r { text-align:right; }
-          .items-table tbody tr { border-bottom:1px solid #f8fafc; }
-          .items-table tbody tr:last-child { border-bottom:none; }
-          .items-table tbody td { padding:16px 0; font-size:13.5px; color:#334155; vertical-align:top; }
-          .items-table tbody td.r { text-align:right; font-weight:600; color:#0f172a; }
-          .item-desc { font-weight:500; color:#0f172a; line-height:1.4; }
-          .item-sub { font-size:11px; color:#94a3b8; margin-top:3px; }
+          /* Items table */
+          .items { padding:28px 40px; }
+          .tbl { width:100%; border-collapse:collapse; }
+          .tbl thead th { font-size:8.5px; font-weight:700; letter-spacing:1.5px; color:#94a3b8; text-transform:uppercase; padding-bottom:12px; border-bottom:1.5px solid #f1f5f9; text-align:left; }
+          .tbl thead th.r { text-align:right; }
+          .tbl tbody tr { border-bottom:1px solid #f8fafc; }
+          .tbl tbody tr:last-child { border-bottom:none; }
+          .tbl td { padding:13px 0; font-size:13px; color:#334155; vertical-align:top; }
+          .tbl td.r { text-align:right; }
+          .td-desc { font-weight:500; color:#0f172a; line-height:1.45; max-width:340px; }
+          .td-muted { font-size:12px; color:#64748b; font-weight:400; }
+          .td-amt { font-weight:700; color:#0f172a; }
 
           /* Totals */
-          .totals-section { border-top:2px solid #f1f5f9; padding:24px 52px 36px; display:flex; justify-content:flex-end; }
-          .totals-box { min-width:260px; }
-          .tot-row { display:flex; justify-content:space-between; align-items:center; gap:40px; font-size:13px; color:#64748b; padding:7px 0; }
-          .tot-row.sub { border-bottom:1px solid #f1f5f9; margin-bottom:4px; padding-bottom:12px; }
-          .tot-row.grand { margin-top:12px; padding-top:14px; border-top:2px solid #0f172a; }
-          .tot-row.grand span:first-child { font-size:14px; font-weight:700; color:#0f172a; }
-          .tot-row.grand span:last-child { font-size:22px; font-weight:800; color:#0f172a; }
-          .tot-row .disc { color:#dc2626; }
+          .totals { display:flex; justify-content:flex-end; padding:4px 40px 28px; }
+          .tot-wrap { width:220px; }
+          .tr { display:flex; justify-content:space-between; font-size:12.5px; color:#64748b; padding:5px 0; }
+          .tr.sep { border-bottom:1px solid #f1f5f9; padding-bottom:10px; margin-bottom:4px; }
+          .tr.grand { border-top:1.5px solid #0f172a; margin-top:8px; padding-top:10px; }
+          .tr.grand span:first-child { font-size:13px; font-weight:700; color:#0f172a; }
+          .tr.grand span:last-child { font-size:19px; font-weight:800; color:#0f172a; letter-spacing:-0.5px; }
+          .disc { color:#dc2626; }
 
           /* Notes */
-          .notes-section { margin:0 52px 36px; background:#f8fafc; border-radius:6px; padding:20px 24px; border-left:3px solid #6366F1; }
-          .notes-label { font-size:9px; font-weight:700; letter-spacing:1.5px; color:#6366F1; text-transform:uppercase; margin-bottom:8px; }
-          .notes-text { font-size:12.5px; color:#475569; line-height:1.7; }
+          .notes { margin:0 40px 24px; background:#f8fafc; border-left:3px solid #6366F1; padding:14px 18px; border-radius:0 4px 4px 0; }
+          .notes-lbl { font-size:8.5px; font-weight:700; letter-spacing:1.5px; color:#6366F1; text-transform:uppercase; margin-bottom:6px; }
+          .notes-txt { font-size:12px; color:#475569; line-height:1.75; white-space:pre-line; }
 
           /* Footer */
-          .inv-footer { background:#f8fafc; border-top:1px solid #f1f5f9; padding:20px 52px; display:flex; justify-content:space-between; align-items:center; }
-          .footer-brand { font-size:11px; font-weight:700; color:#94a3b8; letter-spacing:1px; text-transform:uppercase; }
-          .footer-contact { font-size:11px; color:#94a3b8; }
-          .footer-thanks { font-size:11px; color:#94a3b8; font-style:italic; }
+          .inv-foot { display:flex; align-items:center; justify-content:space-between; padding:14px 40px; background:#f8fafc; border-top:1px solid #f1f5f9; }
+          .foot-left { font-size:10px; font-weight:700; color:#94a3b8; letter-spacing:1px; text-transform:uppercase; }
+          .foot-mid { font-size:10px; color:#94a3b8; }
+          .foot-right { font-size:10px; color:#94a3b8; font-style:italic; }
 
           @media print {
             html, body { background:white; padding:0; }
-            .invoice { box-shadow:none; border-radius:0; max-width:100%; }
+            .sheet { box-shadow:none; max-width:100%; }
             @page { margin:0; size:A4 portrait; }
           }
-          @media (max-width: 640px) {
-            body { padding: 72px 0 0; }
-            .inv-header { padding:28px 24px; }
-            .meta-row { grid-template-columns:1fr; }
-            .meta-cell { padding:16px 24px; border-right:none; border-bottom:1px solid #f1f5f9; }
-            .items-section { padding:24px; }
-            .totals-section { padding:16px 24px 24px; }
-            .totals-box { min-width:100%; }
-            .notes-section { margin:0 24px 24px; }
-            .inv-footer { padding:16px 24px; flex-direction:column; gap:6px; text-align:center; }
+          @media(max-width:600px){
+            body { padding:68px 0 0; }
+            .inv-head-inner,.meta-col,.items,.totals,.notes,.inv-foot { padding-left:20px; padding-right:20px; }
+            .meta { grid-template-columns:1fr; }
+            .meta-col { border-right:none; border-bottom:1px solid #f1f5f9; padding:14px 20px; }
+            .tot-wrap { width:100%; }
           }
         `}</style>
       </head>
       <body>
         <PrintBar invNum={invNum} clientName={client?.name ?? 'Invoice'} />
 
-        <div className="invoice">
-          <div className="accent-bar" />
-
+        <div className="sheet">
           {/* Header */}
-          <div className="inv-header">
-            <div>
-              <div className="brand-name">DOT IT</div>
-              <div className="brand-sub">CREATIVE AGENCY</div>
-            </div>
-            <div className="inv-title-block">
-              <div className="inv-label">Invoice</div>
-              <div className="inv-number">{invNum}</div>
-              <div className="status-pill">{st.label}</div>
+          <div className="inv-head">
+            <div className="stripe" />
+            <div className="inv-head-inner">
+              <div className="brand">
+                <div className="brand-name">DOT IT</div>
+                <div className="brand-tagline">Creative Agency</div>
+              </div>
+              <div className="inv-id-block">
+                <div className="inv-id-label">Invoice</div>
+                <div className="inv-id-num">{invNum}</div>
+                <div className="status-badge">
+                  <div className="status-dot" />
+                  {st.label}
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Meta: Bill To / Issue Date / Due Date */}
-          <div className="meta-row">
-            <div className="meta-cell">
-              <div className="meta-label">Bill To</div>
+          {/* Meta strip */}
+          <div className="meta">
+            <div className="meta-col">
+              <div className="ml">Bill To</div>
               {client ? (
                 <>
-                  <div className="meta-value">{client.name}</div>
-                  {client.company && <div className="meta-value muted">{client.company}</div>}
-                  {client.email   && <div className="meta-value muted">{client.email}</div>}
-                  {client.phone   && <div className="meta-value muted">{client.phone}</div>}
+                  <div className="mv">{client.name}</div>
+                  {client.company && <div className="mv-sm">{client.company}</div>}
+                  {client.email   && <div className="mv-sm">{client.email}</div>}
+                  {client.phone   && <div className="mv-sm">{client.phone}</div>}
                 </>
-              ) : <div className="meta-value muted">—</div>}
+              ) : <div className="mv-sm">—</div>}
             </div>
-            <div className="meta-cell">
-              <div className="meta-label">Issue Date</div>
-              <div className="meta-value">{formatDate(invoice.created_at)}</div>
-              {project && (
-                <>
-                  <div className="meta-label" style={{marginTop:'18px'}}>Project</div>
-                  <div className="meta-value">{project.name}</div>
-                </>
-              )}
+            <div className="meta-col">
+              <div className="ml">Issued</div>
+              <div className="mv">{formatDate(invoice.created_at)}</div>
+              {project && <>
+                <div className="ml" style={{marginTop:16}}>Project</div>
+                <div className="mv">{project.name}</div>
+              </>}
             </div>
-            <div className="meta-cell">
-              <div className="meta-label">Due Date</div>
-              <div className={`meta-value ${invoice.status === 'overdue' ? 'overdue' : ''}`}>
-                {formatDate(invoice.due_date)}
+            <div className="meta-col">
+              <div className="ml">Due Date</div>
+              <div className={`mv ${invoice.status === 'overdue' ? 'mv-bad' : ''}`}>
+                {invoice.due_date ? formatDate(invoice.due_date) : '—'}
               </div>
-              {invoice.status === 'paid' && invoice.paid_date && (
-                <>
-                  <div className="meta-label" style={{marginTop:'18px'}}>Paid On</div>
-                  <div className="meta-value paid">{formatDate(invoice.paid_date)}</div>
-                </>
-              )}
+              {invoice.status === 'paid' && invoice.paid_date && <>
+                <div className="ml" style={{marginTop:16}}>Paid On</div>
+                <div className="mv mv-ok">{formatDate(invoice.paid_date)}</div>
+              </>}
             </div>
           </div>
 
           {/* Line items */}
-          <div className="items-section">
-            <table className="items-table">
+          <div className="items">
+            <table className="tbl">
               <thead>
                 <tr>
-                  <th style={{width: items.length ? '52%' : '80%'}}>Description</th>
+                  <th style={{width: items.length ? '50%' : '80%'}}>Description</th>
                   {items.length > 0 && <>
                     <th className="r" style={{width:'10%'}}>Qty</th>
                     <th className="r" style={{width:'18%'}}>Unit Price</th>
@@ -215,17 +212,15 @@ export default async function InvoicePDFPage({ params }: PageProps) {
               <tbody>
                 {items.length > 0 ? items.map((item: any) => (
                   <tr key={item.id}>
-                    <td><div className="item-desc">{item.description}</div></td>
-                    <td className="r" style={{color:'#64748b'}}>
-                      {Number(item.quantity) % 1 === 0 ? Math.floor(item.quantity) : item.quantity}
-                    </td>
-                    <td className="r" style={{color:'#64748b'}}>{fmt(item.unit_price)}</td>
-                    <td className="r">{fmt(item.amount ?? item.quantity * item.unit_price)}</td>
+                    <td><div className="td-desc">{item.description}</div></td>
+                    <td className="r td-muted">{Number(item.quantity) % 1 === 0 ? Math.floor(item.quantity) : item.quantity}</td>
+                    <td className="r td-muted">{fmt(item.unit_price)}</td>
+                    <td className="r td-amt">{fmt(item.amount ?? item.quantity * item.unit_price)}</td>
                   </tr>
                 )) : (
                   <tr>
-                    <td><div className="item-desc">{invoice.title}</div></td>
-                    <td className="r">{fmt(Number(invoice.amount ?? 0))}</td>
+                    <td><div className="td-desc">{invoice.title}</div></td>
+                    <td className="r td-amt">{fmt(Number(invoice.amount ?? 0))}</td>
                   </tr>
                 )}
               </tbody>
@@ -233,27 +228,16 @@ export default async function InvoicePDFPage({ params }: PageProps) {
           </div>
 
           {/* Totals */}
-          <div className="totals-section">
-            <div className="totals-box">
+          <div className="totals">
+            <div className="tot-wrap">
               {items.length > 0 && (
-                <div className={`tot-row${(taxRate > 0 || discount > 0) ? ' sub' : ''}`}>
-                  <span>Subtotal</span>
-                  <span>{fmt(subtotal)}</span>
+                <div className={`tr${(taxRate > 0 || discount > 0) ? ' sep' : ''}`}>
+                  <span>Subtotal</span><span>{fmt(subtotal)}</span>
                 </div>
               )}
-              {taxRate > 0 && (
-                <div className="tot-row">
-                  <span>Tax ({taxRate}%)</span>
-                  <span>{fmt(taxAmt)}</span>
-                </div>
-              )}
-              {discount > 0 && (
-                <div className="tot-row">
-                  <span>Discount</span>
-                  <span className="disc">−{fmt(discount)}</span>
-                </div>
-              )}
-              <div className="tot-row grand">
+              {taxRate > 0 && <div className="tr"><span>Tax ({taxRate}%)</span><span>{fmt(taxAmt)}</span></div>}
+              {discount > 0 && <div className="tr"><span>Discount</span><span className="disc">−{fmt(discount)}</span></div>}
+              <div className="tr grand">
                 <span>Total Due</span>
                 <span>{fmt(total)}</span>
               </div>
@@ -262,17 +246,17 @@ export default async function InvoicePDFPage({ params }: PageProps) {
 
           {/* Notes */}
           {invoice.notes && (
-            <div className="notes-section">
-              <div className="notes-label">Notes & Payment Instructions</div>
-              <div className="notes-text">{invoice.notes}</div>
+            <div className="notes">
+              <div className="notes-lbl">Notes & Payment Instructions</div>
+              <div className="notes-txt">{invoice.notes}</div>
             </div>
           )}
 
           {/* Footer */}
-          <div className="inv-footer">
-            <div className="footer-brand">DOT IT Agency</div>
-            <div className="footer-contact">ask.dot.it@gmail.com</div>
-            <div className="footer-thanks">Thank you for your business</div>
+          <div className="inv-foot">
+            <div className="foot-left">DOT IT Agency</div>
+            <div className="foot-mid">ask.dot.it@gmail.com</div>
+            <div className="foot-right">Thank you for your business</div>
           </div>
         </div>
       </body>

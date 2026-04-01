@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowLeft, Plus, Trash2, GripVertical } from 'lucide-react'
 import Link from 'next/link'
+import { generateInvoiceNumber } from '@/lib/invoice-number'
 
 interface LineItem {
   id: string
@@ -34,6 +35,7 @@ export default function NewInvoicePage() {
     tax_rate: '',
     discount: '',
     notes: '',
+    invoice_number: generateInvoiceNumber(),
   })
 
   useEffect(() => {
@@ -80,6 +82,7 @@ export default function NewInvoicePage() {
       tax_rate: taxRate || null,
       discount: discount || null,
       notes: form.notes || null,
+      invoice_number: form.invoice_number,
     }).select('id').single()
 
     if (invErr || !inv) { setError(invErr?.message ?? 'Failed to create invoice'); setLoading(false); return }
@@ -116,9 +119,20 @@ export default function NewInvoicePage() {
         <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-7 space-y-5">
           <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider">Invoice Details</h2>
 
-          <div>
-            <label className={labelCls}>Invoice Title</label>
-            <input value={form.title} onChange={set('title')} className={inputCls} placeholder="e.g. Website Design — Phase 1 (auto-filled from first item if blank)" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className={labelCls}>Invoice Title</label>
+              <input value={form.title} onChange={set('title')} className={inputCls} placeholder="e.g. Website Design — Phase 1" />
+            </div>
+            <div>
+              <label className={labelCls}>Invoice #</label>
+              <div className="flex gap-2">
+                <input value={form.invoice_number} readOnly className={`${inputCls} font-mono bg-gray-50 text-gray-600`} />
+                <button type="button" onClick={() => setForm(f => ({ ...f, invoice_number: generateInvoiceNumber() }))}
+                  title="Regenerate"
+                  className="px-3 py-2 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-all text-lg">↻</button>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
