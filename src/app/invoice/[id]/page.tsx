@@ -31,8 +31,8 @@ export default async function InvoicePDFPage({ params }: PageProps) {
     .eq('invoice_id', id)
     .order('sort_order')
 
-  const client = (invoice.clients as any)?.[0] ?? null
-  const project = (invoice.projects as any)?.[0] ?? null
+  const client = (invoice.clients as any) ?? null
+  const project = (invoice.projects as any) ?? null
   const invNum = (invoice as any).invoice_number ?? `DI-${id.slice(0, 8).toUpperCase()}`
   const items = rawItems ?? []
 
