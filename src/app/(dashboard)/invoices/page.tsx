@@ -13,7 +13,7 @@ export default async function InvoicesPage({ searchParams }: Props) {
   const supabase = await createClient()
   const query = supabase
     .from('invoices')
-    .select(`id, title, amount, status, due_date, paid_date, notes, invoice_number, clients(name), projects(name)`)
+    .select(`id, title, amount, status, due_date, paid_date, notes, invoice_number, client_id, project_id, clients(id, name), projects(id, name)`)
     .order('created_at', { ascending: false })
 
   const { data: invoices } = showArchived
@@ -94,8 +94,8 @@ export default async function InvoicesPage({ searchParams }: Props) {
           {/* Mobile cards */}
           <div className="sm:hidden space-y-3">
             {invoices.map(invoice => {
-              const client = (invoice.clients as { name: string }[] | null)?.[0] ?? null
-              const project = (invoice.projects as { name: string }[] | null)?.[0] ?? null
+              const client = (invoice.clients as { name: string } | null) ?? null
+              const project = (invoice.projects as { name: string } | null) ?? null
               return (
                 <div key={invoice.id}
                   className={`bg-white rounded-2xl border shadow-sm p-4 ${invoice.status === 'overdue' ? 'border-red-200' : 'border-gray-100'}`}>
@@ -139,8 +139,8 @@ export default async function InvoicesPage({ searchParams }: Props) {
               </thead>
               <tbody>
                 {invoices.map(invoice => {
-                  const client = (invoice.clients as { name: string }[] | null)?.[0] ?? null
-                  const project = (invoice.projects as { name: string }[] | null)?.[0] ?? null
+                  const client = (invoice.clients as { name: string } | null) ?? null
+                  const project = (invoice.projects as { name: string } | null) ?? null
                   return (
                     <tr key={invoice.id} className={`border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors ${invoice.status === 'overdue' ? 'bg-red-50/30' : ''}`}>
                       <td className="px-5 py-3.5">
