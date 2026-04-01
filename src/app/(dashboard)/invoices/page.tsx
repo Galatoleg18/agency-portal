@@ -99,28 +99,35 @@ export default async function InvoicesPage({ searchParams }: Props) {
               return (
                 <div key={invoice.id}
                   className={`bg-white rounded-2xl border shadow-sm p-4 ${invoice.status === 'overdue' ? 'border-red-200' : 'border-gray-100'}`}>
-                  <div className="flex items-start justify-between gap-2 mb-3">
+                  {/* Row 1: title + amount */}
+                  <div className="flex items-start justify-between gap-3 mb-1">
                     <div className="flex-1 min-w-0">
-                      {invoice.status === 'overdue' && <AlertCircle size={13} className="text-red-500 inline mr-1" />}
-                      <p className="font-semibold text-gray-900 text-sm truncate inline">{invoice.title}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{client?.name ?? '—'}{project?.name ? ` · ${project.name}` : ''}</p>
+                      <p className="font-semibold text-gray-900 text-sm leading-snug truncate">{invoice.title}</p>
                     </div>
-                    <p className="text-lg font-bold text-gray-900 flex-shrink-0">{formatCurrency(invoice.amount)}</p>
+                    <p className="text-base font-bold text-gray-900 flex-shrink-0 tabular-nums">{formatCurrency(invoice.amount)}</p>
                   </div>
-                  <div className="flex items-center justify-between">
+                  {/* Row 2: client · project */}
+                  <p className="text-xs text-gray-400 mb-3 truncate">
+                    {client?.name ?? '—'}{project?.name ? ` · ${project.name}` : ''}
+                  </p>
+                  {/* Row 3: status + date */}
+                  <div className="flex items-center justify-between mb-3">
                     <StatusSelect table="invoices" id={invoice.id} currentStatus={invoice.status} />
-                    <div className="flex items-center gap-3">
-                      <p className="text-xs text-gray-400">
-                        {invoice.status === 'paid' ? `Paid ${formatDate(invoice.paid_date)}` : `Due ${formatDate(invoice.due_date)}`}
-                      </p>
-                      <div className="flex items-center gap-3">
-                        <Link href={`/invoice/${invoice.id}`} target="_blank"
-                          className="text-xs text-gray-400 hover:text-[#6366F1] transition-colors flex items-center gap-1">
-                          <Download size={12} /> PDF
-                        </Link>
-                        <InvoiceActions id={invoice.id} isArchived={invoice.status === 'archived'} />
-                      </div>
-                    </div>
+                    <p className="text-xs text-gray-400">
+                      {invoice.status === 'paid' ? `Paid ${formatDate(invoice.paid_date)}` : `Due ${formatDate(invoice.due_date)}`}
+                    </p>
+                  </div>
+                  {/* Row 4: actions */}
+                  <div className="flex items-center gap-3 pt-2 border-t border-gray-50">
+                    <Link href={`/invoice/${invoice.id}`} target="_blank"
+                      className="text-xs text-gray-400 hover:text-[#6366F1] transition-colors flex items-center gap-1">
+                      <Download size={12} /> PDF
+                    </Link>
+                    <Link href={`/invoices/${invoice.id}/edit`}
+                      className="inline-flex items-center justify-center w-7 h-7 rounded-lg text-gray-300 hover:text-[#6366F1] hover:bg-indigo-50 transition-all">
+                      <Pencil size={13} />
+                    </Link>
+                    <InvoiceActions id={invoice.id} isArchived={invoice.status === 'archived'} />
                   </div>
                 </div>
               )
