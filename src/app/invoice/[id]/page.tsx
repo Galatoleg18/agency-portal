@@ -255,7 +255,6 @@ export default async function InvoicePDFPage({ params }: PageProps) {
           {/* Footer */}
           <div className="inv-foot">
             <div className="foot-left">DOT IT Agency</div>
-            <div className="foot-mid">ask.dot.it@gmail.com</div>
             <div className="foot-right">Thank you for your business</div>
           </div>
         </div>
