@@ -153,20 +153,28 @@ export default async function ClientProjectPage({ params }: PageProps) {
                           Tasks · {phaseDone}/{tasks.length}
                         </p>
                         <div className="space-y-1.5">
-                          {tasks.map(task => (
-                            <div key={task.id} className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 border text-sm
-                              ${task.is_complete ? 'border-green-100 bg-green-50' : 'border-gray-100'}`}>
-                              {task.is_complete
-                                ? <CheckCircle2 size={15} className="text-green-500 flex-shrink-0" />
-                                : <Circle size={15} className="text-gray-300 flex-shrink-0" />}
-                              <span className={task.is_complete ? 'line-through text-gray-400 flex-1' : 'text-gray-700 flex-1'}>{task.title}</span>
-                              {task.due_date && (
-                                <span className="text-xs text-gray-400 flex-shrink-0">
-                                  {new Date(task.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          {tasks.map(task => {
+                            const taskDue = task.due_date ? new Date(task.due_date) : null
+                            const taskOverdue = taskDue && !task.is_complete && taskDue < now
+                            return (
+                              <div key={task.id} className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 border text-sm
+                                ${task.is_complete ? 'border-green-100 bg-green-50' : taskOverdue ? 'border-red-100 bg-red-50/50' : 'border-gray-100'}`}>
+                                {task.is_complete
+                                  ? <CheckCircle2 size={15} className="text-green-500 flex-shrink-0" />
+                                  : taskOverdue
+                                    ? <Clock size={15} className="text-red-400 flex-shrink-0" />
+                                    : <Circle size={15} className="text-gray-300 flex-shrink-0" />}
+                                <span className={task.is_complete ? 'line-through text-gray-400 flex-1' : taskOverdue ? 'text-red-700 flex-1' : 'text-gray-700 flex-1'}>
+                                  {task.title}
                                 </span>
-                              )}
-                            </div>
-                          ))}
+                                {task.due_date && (
+                                  <span className={`text-xs flex-shrink-0 ${taskOverdue ? 'text-red-500 font-semibold' : 'text-gray-400'}`}>
+                                    {taskOverdue ? 'Overdue · ' : ''}{new Date(task.due_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                  </span>
+                                )}
+                              </div>
+                            )
+                          })}
                         </div>
                       </div>
                     )}

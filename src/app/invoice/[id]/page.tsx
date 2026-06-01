@@ -137,6 +137,7 @@ export default async function InvoicePDFPage({ params }: PageProps) {
             .meta { grid-template-columns:1fr; }
             .meta-col { border-right:none; border-bottom:1px solid #f1f5f9; padding:14px 20px; }
             .tot-wrap { width:100%; }
+            .pay-grid { grid-template-columns:1fr !important; margin-left:20px !important; margin-right:20px !important; }
           }
         `}</style>
       </head>
@@ -251,6 +252,20 @@ export default async function InvoicePDFPage({ params }: PageProps) {
               <div className="notes-txt">{invoice.notes}</div>
             </div>
           )}
+
+          {/* How to Pay */}
+          <div style={{margin:'0 40px 28px',display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
+            <div style={{background:'#f8fafc',border:'1px solid #e2e8f0',borderRadius:'6px',padding:'16px 20px'}}>
+              <div style={{fontSize:'8.5px',fontWeight:700,letterSpacing:'1.5px',color:'#6366F1',textTransform:'uppercase',marginBottom:'10px'}}>Option 1 — Check</div>
+              <div style={{fontSize:'12.5px',fontWeight:600,color:'#0f172a',marginBottom:'3px'}}>Payable to: DOT IT Agency</div>
+              <div style={{fontSize:'12px',color:'#64748b',lineHeight:1.6}}>11909 SE 220th Ct<br/>Kent, WA 98031</div>
+            </div>
+            <div style={{background:'#f0fdf4',border:'1px solid #bbf7d0',borderRadius:'6px',padding:'16px 20px'}}>
+              <div style={{fontSize:'8.5px',fontWeight:700,letterSpacing:'1.5px',color:'#059669',textTransform:'uppercase',marginBottom:'10px'}}>Option 2 — Zelle</div>
+              <div style={{fontSize:'12.5px',fontWeight:600,color:'#0f172a',marginBottom:'3px'}}>Mykola Olifirenko</div>
+              <div style={{fontSize:'12px',color:'#64748b'}}>nik_olif@hotmail.com</div>
+            </div>
+          </div>
 
           {/* Footer */}
           <div className="inv-foot">
