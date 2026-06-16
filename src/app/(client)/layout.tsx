@@ -15,7 +15,7 @@ export default async function ClientPortalLayout({ children }: { children: React
           <div className="flex items-center gap-8">
             <Link href="/portal">
               <div>
-                <span className="text-lg font-black text-[#0F172A] tracking-tight">DOT IT</span>
+                <span className="text-lg font-black text-[#0F172A] tracking-tight">DOT.IT</span>
                 <div className="w-5 h-0.5 bg-[#6366F1] mt-0.5 rounded-full" />
               </div>
             </Link>

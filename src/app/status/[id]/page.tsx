@@ -50,7 +50,7 @@ export default async function PublicStatusPage({ params }: PageProps) {
             <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'16px',marginBottom:'20px'}}>
               <div>
                 <div style={{fontSize:'11px',fontWeight:700,color:'#94a3b8',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'6px'}}>
-                  DOT IT Agency
+                  DOT.IT
                 </div>
                 <h1 style={{fontSize:'22px',fontWeight:800,margin:'0 0 6px',color:'#0f172a'}}>{project.name}</h1>
                 {project.description && <p style={{fontSize:'14px',color:'#64748b',margin:0,lineHeight:'1.5'}}>{project.description}</p>}
@@ -167,7 +167,7 @@ export default async function PublicStatusPage({ params }: PageProps) {
           {/* Footer */}
           <div style={{textAlign:'center',fontSize:'12px',color:'#94a3b8',padding:'20px 0'}}>
             Last updated: {new Date().toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'})} ·
-            Powered by <strong style={{color:'#6366F1'}}>DOT IT</strong>
+            Powered by <strong style={{color:'#6366F1'}}>DOT.IT</strong>
           </div>
         </div>
       </body>

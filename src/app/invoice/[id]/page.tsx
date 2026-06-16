@@ -150,7 +150,7 @@ export default async function InvoicePDFPage({ params }: PageProps) {
             <div className="stripe" />
             <div className="inv-head-inner">
               <div className="brand">
-                <div className="brand-name">DOT IT</div>
+                <div className="brand-name">DOT.IT</div>
                 <div className="brand-tagline">Creative Agency</div>
               </div>
               <div className="inv-id-block">
@@ -257,8 +257,8 @@ export default async function InvoicePDFPage({ params }: PageProps) {
           <div style={{margin:'0 40px 28px',display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
             <div style={{background:'#f8fafc',border:'1px solid #e2e8f0',borderRadius:'6px',padding:'16px 20px'}}>
               <div style={{fontSize:'8.5px',fontWeight:700,letterSpacing:'1.5px',color:'#6366F1',textTransform:'uppercase',marginBottom:'10px'}}>Option 1 — Check</div>
-              <div style={{fontSize:'12.5px',fontWeight:600,color:'#0f172a',marginBottom:'3px'}}>Payable to: DOT IT Agency</div>
-              <div style={{fontSize:'12px',color:'#64748b',lineHeight:1.6}}>11909 SE 220th Ct<br/>Kent, WA 98031</div>
+              <div style={{fontSize:'12.5px',fontWeight:600,color:'#0f172a',marginBottom:'3px'}}>Payable to: DOT.IT</div>
+              <div style={{fontSize:'12px',color:'#64748b',lineHeight:1.6}}>Mykola Olifirenko<br/>11909 SE 220th Ct<br/>Kent, WA 98031</div>
             </div>
             <div style={{background:'#f0fdf4',border:'1px solid #bbf7d0',borderRadius:'6px',padding:'16px 20px'}}>
               <div style={{fontSize:'8.5px',fontWeight:700,letterSpacing:'1.5px',color:'#059669',textTransform:'uppercase',marginBottom:'10px'}}>Option 2 — Zelle</div>
@@ -269,7 +269,7 @@ export default async function InvoicePDFPage({ params }: PageProps) {
 
           {/* Footer */}
           <div className="inv-foot">
-            <div className="foot-left">DOT IT Agency</div>
+            <div className="foot-left">DOT.IT</div>
             <div className="foot-right">Thank you for your business</div>
           </div>
         </div>

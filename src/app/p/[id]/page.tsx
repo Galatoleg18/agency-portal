@@ -239,7 +239,7 @@ export default async function PublicProjectPage({ params }: PageProps) {
 
           {/* Footer */}
           <div className="foot">
-            <div className="foot-brand">Powered by <strong>DOT IT</strong> Agency</div>
+            <div className="foot-brand">Powered by <strong>DOT.IT</strong></div>
           </div>
         </div>
       </body>

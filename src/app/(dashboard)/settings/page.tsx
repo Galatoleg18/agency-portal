@@ -97,7 +97,7 @@ export default async function SettingsPage() {
             </div>
             <div className="flex justify-between py-2 border-b border-gray-50">
               <span className="text-gray-400">Agency</span>
-              <span className="font-medium">DOT IT</span>
+              <span className="font-medium">DOT.IT</span>
             </div>
             <div className="flex justify-between py-2">
               <span className="text-gray-400">Support</span>

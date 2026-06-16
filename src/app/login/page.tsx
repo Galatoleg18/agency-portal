@@ -73,7 +73,7 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-block">
-            <span className="text-4xl font-black text-[#0F172A] tracking-tight">DOT IT</span>
+            <span className="text-4xl font-black text-[#0F172A] tracking-tight">DOT.IT</span>
             <div className="h-0.5 bg-[#6366F1] rounded-full mt-1.5" />
           </div>
           <p className="text-gray-400 text-sm mt-3">Sign in to your portal</p>
@@ -163,7 +163,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="text-center text-gray-400 text-xs mt-6">© 2026 DOT IT Agency</p>
+        <p className="text-center text-gray-400 text-xs mt-6">© 2026 DOT.IT</p>
       </div>
     </div>
   )

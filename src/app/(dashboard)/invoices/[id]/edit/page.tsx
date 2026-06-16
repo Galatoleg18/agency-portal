@@ -310,7 +310,7 @@ export default function EditInvoicePage() {
         <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-7">
           <label className={labelCls}>Notes / Payment Instructions</label>
           <textarea value={form.notes} onChange={set('notes')} rows={3}
-            placeholder="e.g. Payment via cash or check payable to DOT IT Agency"
+            placeholder="e.g. Payment via cash or check payable to DOT.IT"
             className={`${inputCls} resize-none`} />
         </div>
 

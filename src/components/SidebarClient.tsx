@@ -27,7 +27,7 @@ function NavContent({ userEmail, pathname, onLogout, onClose }: {
       {/* Logo */}
       <div className="px-5 py-5 border-b border-gray-100 flex items-center justify-between">
         <div>
-          <span className="text-xl font-black text-[#0F172A] tracking-tight">DOT IT</span>
+          <span className="text-xl font-black text-[#0F172A] tracking-tight">DOT.IT</span>
           <div className="w-6 h-0.5 bg-[#6366F1] mt-1 rounded-full" />
         </div>
         {onClose && (
@@ -91,7 +91,7 @@ export default function SidebarClient({ userEmail }: { userEmail: string; userId
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-100 flex items-center justify-between px-4 py-3.5 shadow-sm">
         <div>
-          <span className="text-lg font-black text-[#0F172A] tracking-tight">DOT IT</span>
+          <span className="text-lg font-black text-[#0F172A] tracking-tight">DOT.IT</span>
           <div className="w-5 h-0.5 bg-[#6366F1] mt-0.5 rounded-full" />
         </div>
         <button onClick={() => setMobileOpen(true)} className="text-gray-400 hover:text-gray-700 p-1 transition-colors">

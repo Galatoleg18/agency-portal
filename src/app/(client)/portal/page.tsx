@@ -20,7 +20,7 @@ export default async function ClientPortalPage() {
         </div>
         <h2 className="text-lg font-semibold text-gray-700 mb-2">No projects linked</h2>
         <p className="text-gray-400 text-sm max-w-sm mx-auto">
-          Your account hasn't been linked to any client record yet. Contact your DOT IT project manager.
+          Your account hasn't been linked to any client record yet. Contact your DOT.IT project manager.
         </p>
       </div>
     )
